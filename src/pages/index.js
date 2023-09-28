@@ -20,18 +20,19 @@ export default function Home() {
   ]
 
   const choosePhrase = () => {
-    // See if it is already stored in local storage
-    const storedPhrase = localStorage.getItem('phrase')
-    if (storedPhrase) {
-      const phrasesWithoutStoredPhrase = phrases.filter((phrase, index) => index !== parseInt(storedPhrase))
-      const newPhrase = Math.floor(Math.random() * phrasesWithoutStoredPhrase.length)
-      localStorage.setItem('phrase', newPhrase)
-      return phrasesWithoutStoredPhrase[newPhrase]
-    }
-    // If not, choose a random one
-    const phrase = Math.floor(Math.random() * phrases.length)
-    localStorage.setItem('phrase', phrase)
-    return phrases[phrase]
+    let newPhrases
+    const rawStoredPhrases = JSON.parse(localStorage.getItem('phrases'))
+    console.log(!rawStoredPhrases || rawStoredPhrases.length === 0)
+
+    if (!rawStoredPhrases || rawStoredPhrases.length === phrases.length) newPhrases = [ ...phrases ]
+    else newPhrases = phrases.filter(phrase => !rawStoredPhrases.includes(phrase))
+
+    const rndPhrase = Math.floor(Math.random() * newPhrases.length)
+    const storedPhrases = phrases.filter(phrase => !newPhrases.includes(phrase) || phrase === newPhrases[rndPhrase])
+    console.log('stored', storedPhrases, 'curr', newPhrases[rndPhrase])
+    localStorage.setItem('phrases', JSON.stringify(storedPhrases))
+
+    return newPhrases[rndPhrase]
   }
 
   const [phrase, setPhrase] = useState()
