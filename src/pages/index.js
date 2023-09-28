@@ -132,7 +132,7 @@ export default function Home() {
 
   useEffect(() => {
     if (!phrase) return
-    document.title = phrase + ' FEMBOYS'
+    document.title = phrase + ' FEMBOYS | caamillo'
     particleAlphabet.init()
   }, [phrase])
 
