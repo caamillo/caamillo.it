@@ -2,8 +2,12 @@ import { useEffect, useState } from "react"
 
 export default function Home() {
 
+  const [screenSize, setScreenSize] = useState()
+  const [phrase, setPhrase] = useState()
+
   const AMOUNT_PARTICLES = 6e3
   const INTERVAL_CHANGE_LETTER = 1e3
+  const VIEW_OFFSET = 10
 
   const phrases = [
     'I LOVE',
@@ -16,26 +20,22 @@ export default function Home() {
     'I AM INFATUATED WITH',
     'I AM MAD ABOUT',
     'I AM WILD ABOUT',
-    'I AM KEEN ON',
+    'I AM KEEN ON'
   ]
 
   const choosePhrase = () => {
     let newPhrases
     const rawStoredPhrases = JSON.parse(localStorage.getItem('phrases'))
-    console.log(!rawStoredPhrases || rawStoredPhrases.length === 0)
 
     if (!rawStoredPhrases || rawStoredPhrases.length === phrases.length) newPhrases = [ ...phrases ]
     else newPhrases = phrases.filter(phrase => !rawStoredPhrases.includes(phrase))
 
     const rndPhrase = Math.floor(Math.random() * newPhrases.length)
     const storedPhrases = phrases.filter(phrase => !newPhrases.includes(phrase) || phrase === newPhrases[rndPhrase])
-    console.log('stored', storedPhrases, 'curr', newPhrases[rndPhrase])
     localStorage.setItem('phrases', JSON.stringify(storedPhrases))
 
     return newPhrases[rndPhrase]
   }
-
-  const [phrase, setPhrase] = useState()
 
   var particleAlphabet = {
     Particle: function(x, y) {
@@ -50,7 +50,7 @@ export default function Home() {
         ctx.restore();
       };
     },
-    init: function() {
+    init: function(size) {
       particleAlphabet.canvas = document.querySelector('canvas');
       particleAlphabet.ctx = particleAlphabet.canvas.getContext('2d');
       particleAlphabet.W = window.innerWidth;
@@ -65,7 +65,7 @@ export default function Home() {
   
       setInterval(function(){
         particleAlphabet.changeLetter();
-        particleAlphabet.getPixels(particleAlphabet.tmpCanvas, particleAlphabet.tmpCtx);
+        particleAlphabet.getPixels(particleAlphabet.tmpCanvas, particleAlphabet.tmpCtx, size);
       }, INTERVAL_CHANGE_LETTER);
   
       particleAlphabet.makeParticles(AMOUNT_PARTICLES);
@@ -73,8 +73,7 @@ export default function Home() {
     }, 
     currentPos: 0,
     changeLetter: function() {
-      var letters = phrase + ' FEMBOYS',
-        letters = letters.split(' ');
+      const letters = (phrase + ' FEMBOYS').split(' ')
       particleAlphabet.time = letters[particleAlphabet.currentPos];
       particleAlphabet.currentPos++;
       if (particleAlphabet.currentPos >= letters.length) {
@@ -86,14 +85,16 @@ export default function Home() {
         particleAlphabet.particles.push(new particleAlphabet.Particle(particleAlphabet.W / 2 + Math.random() * 400 - 200, particleAlphabet.H / 2 + Math.random() * 400 -200));
       }
     },
-    getPixels: function(canvas, ctx) {
+    getPixels: function(canvas, ctx, size) {
       var keyword = particleAlphabet.time,
         gridX = 6,
         gridY = 6;
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
       ctx.fillStyle = 'red';
-      ctx.font = 'italic bold 330px Noto Serif';
+      const maxLengthWord = Math.max(...(phrase + ' FEMBOYS').split(' ').map(el => el.length))
+      console.log(size / maxLengthWord)
+      ctx.font = `italic bold ${ (size / maxLengthWord) + VIEW_OFFSET }px Noto Serif`; // Font size = (DYNscreenSize / maxLengthWord) - OFFSET
       ctx.fillText(keyword, canvas.width / 2 - ctx.measureText(keyword).width / 2, canvas.height / 2 + 100);
       var idata = ctx.getImageData(0, 0, canvas.width, canvas.height);
       var buffer32 = new Uint32Array(idata.data.buffer);
@@ -127,14 +128,23 @@ export default function Home() {
   };
 
   useEffect(() => {
+    document.body.style.background = '#000'
     setPhrase(choosePhrase())
   }, [])
 
   useEffect(() => {
     if (!phrase) return
     document.title = phrase + ' FEMBOYS | caamillo'
-    particleAlphabet.init()
-  }, [phrase])
+    particleAlphabet.init(screenSize || window.innerWidth)
+  }, [phrase, screenSize])
+
+  useEffect(() => {
+    const resizeEvent = () => {
+      setScreenSize(window.innerWidth)
+    }
+    window.addEventListener('resize', resizeEvent)
+    return () => document.removeEventListener('resize', resizeEvent)
+  })
 
   return (
     <>
