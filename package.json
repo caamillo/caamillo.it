@@ -18,7 +18,7 @@
   },
   "devDependencies": {
     "autoprefixer": "latest",
-    "postcss": "latest",
+    "postcss": "^8.4.31",
     "prisma": "^5.4.2",
     "tailwindcss": "latest"
   }

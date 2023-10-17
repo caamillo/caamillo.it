@@ -33,10 +33,9 @@ canvas {
   }
 }
 
-body {
-  min-height: 100vh;
-  min-height: -webkit-fill-available;
-}
-html {
-  height: -webkit-fill-available;
+@supports (-webkit-touch-callout: none) {
+  .h-screen {
+    /* The hack for Safari */
+    height: -webkit-fill-available;
+  }
 }
