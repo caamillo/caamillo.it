@@ -33,21 +33,27 @@ export default function Bodycounts({ bodycount }) {
         <div className="w-screen h-screen flex flex-col justify-center items-center relative bg-[#352F44] text-[#FAF0E6]">
             <p className="fixed top-0 left-1/2 -translate-x-1/2 mt-3 text-lg tracking-wider font-medium">Bodycounts</p>
             <div className='h-[100px] w-[200px] flex items-center justify-center relative overflow-hidden'>
-                <div className='absolute top-0 left-1/2 text-center cels'>
+                <div className={`absolute top-0 left-1/2 text-center ${ Object.keys(bodycount).length > 0 ? 'cels' : '-translate-x-1/2' }`}>
                     {
-                        Array.from({ length: (bodycount.value || -1) + 1 }).map((_, c) =>
+                        Array.from({ length: (bodycount.value || 0) + 1 }).map((_, c) =>
                             <span className="text-8xl font-bold block">{ c }</span>
                         )
                     }
                 </div>
             </div>
-            <p className="fixed bottom-0 left-1/2 -translate-x-1/2 mb-3 text-[#B9B4C7]">Last update: { getTimeAgo(new Date(bodycount.createdAt)) }</p>
+            <p className="fixed bottom-0 left-1/2 -translate-x-1/2 mb-3 text-[#B9B4C7]">Last update: <span className='font-bold'>{ Object.keys(bodycount).length > 0 ? getTimeAgo(new Date(bodycount.createdAt)) : 'never' }</span></p>
         </div>
     )
 }
 
 export async function getServerSideProps() {
     const bodycounts = await prisma.bodycount.findMany({})
+
+    if (!bodycounts.length) return {
+        props: {
+            bodycount: {}
+        }
+    }
 
     const bodycount = bodycounts.reduce((prev, curr) =>
         curr.createdAt > prev.createdAt ? curr : prev
