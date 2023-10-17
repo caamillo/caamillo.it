@@ -15,7 +15,6 @@ module.exports = {
     },
   },
   plugins: [
-    require('@tailwindcss/typography'),
-    require("postcss-100vh-fix")
+    require('@tailwindcss/typography')
   ],
 }
