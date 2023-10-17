@@ -30,8 +30,8 @@ export default function Bodycounts({ bodycount }) {
     }, [])
 
     return (
-        <div className="w-screen h-screen flex flex-col justify-center items-center relative bg-[#352F44] text-[#FAF0E6]">
-            <p className="fixed top-0 left-1/2 -translate-x-1/2 mt-3 text-lg tracking-wider font-medium">Bodycounts</p>
+        <div className="w-screen h-screen flex flex-col justify-between items-center relative bg-[#352F44] text-[#FAF0E6]">
+            <p className="mt-3 text-lg tracking-wider font-medium">Bodycounts</p>
             <div className='h-[100px] w-[200px] flex items-center justify-center relative overflow-hidden'>
                 <div className={`absolute top-0 left-1/2 text-center ${ Object.keys(bodycount).length > 0 ? 'cels' : '-translate-x-1/2' }`}>
                     {
@@ -41,7 +41,7 @@ export default function Bodycounts({ bodycount }) {
                     }
                 </div>
             </div>
-            <p className="fixed bottom-0 text-center left-1/2 -translate-x-1/2 mb-3 text-[#B9B4C7]">Last update: <span className='font-bold block sm:inline'>{ Object.keys(bodycount).length > 0 ? getTimeAgo(new Date(bodycount.createdAt)) : 'never ' }</span></p>
+            <p className="text-center mb-3 text-[#B9B4C7]">Last update: <span className='font-bold block sm:inline'>{ Object.keys(bodycount).length > 0 ? getTimeAgo(new Date(bodycount.createdAt)) : 'never' }</span></p>
         </div>
     )
 }
