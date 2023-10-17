@@ -9,3 +9,12 @@
 canvas {
   display: block;
 }
+
+.md-editor-preview-wrapper {
+  padding: 0 !important;
+}
+
+.gradient-blur {
+  -webkit-mask-image: linear-gradient(to left,white 10%,transparent 80%);
+  mask-image: linear-gradient(to left,white 10%,transparent 80%);
+}

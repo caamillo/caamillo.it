@@ -15,6 +15,6 @@ model Post {
     description String 
     content     String
     tags        String[]
-    author      String
+    author      String @default("Matteo Camillo Ludovico")
     createdAt   DateTime @default(now())
 }
