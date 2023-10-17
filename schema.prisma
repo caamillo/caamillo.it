@@ -18,3 +18,9 @@ model Post {
     author      String @default("Matteo Camillo Ludovico")
     createdAt   DateTime @default(now())
 }
+
+model Bodycount {
+    id          String @id @default(auto()) @map("_id") @db.ObjectId
+    value       Int
+    createdAt   DateTime @default(now())
+}

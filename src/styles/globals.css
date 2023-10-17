@@ -18,3 +18,17 @@ canvas {
   -webkit-mask-image: linear-gradient(to left,white 10%,transparent 80%);
   mask-image: linear-gradient(to left,white 10%,transparent 80%);
 }
+
+.cels {
+  transform: translate(-50%, 0);
+  animation: bodycountAnim 1s ease-in-out forwards;
+}
+
+@keyframes bodycountAnim {
+  from {
+    transform: translate(-50%, 0);
+  }
+  to {
+    transform: translate(-50%, -85%);
+  }
+}
