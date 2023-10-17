@@ -41,7 +41,7 @@ export default function Bodycounts({ bodycount }) {
                     }
                 </div>
             </div>
-            <p className="fixed bottom-0 text-center left-1/2 -translate-x-1/2 mb-3 text-[#B9B4C7]">Last update: <span className='font-bold'>{ Object.keys(bodycount).length > 0 ? getTimeAgo(new Date(bodycount.createdAt)) : 'never' }</span></p>
+            <p className="fixed bottom-0 text-center left-1/2 -translate-x-1/2 mb-3 text-[#B9B4C7]">Last update: <span className='font-bold block sm:inline'>{ Object.keys(bodycount).length > 0 ? getTimeAgo(new Date(bodycount.createdAt)) : 'never sd asf ' }</span></p>
         </div>
     )
 }
