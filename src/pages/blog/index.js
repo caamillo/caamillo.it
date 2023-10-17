@@ -1,5 +1,5 @@
 // Deps
-import prisma from '../../lib/prisma'
+import prisma from '@/lib/prisma'
 
 // Components
 import BlogLayout from '@/components/Blog/BlogLayout'

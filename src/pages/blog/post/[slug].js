@@ -4,6 +4,7 @@ import Link from 'next/link'
 // Deps
 import { MdPreview, MdCatalog } from 'md-editor-rt';
 import 'md-editor-rt/lib/preview.css';
+import prisma from '@/lib/prisma'
 
 // Components
 import BlogLayout from '@/components/Blog/BlogLayout'
