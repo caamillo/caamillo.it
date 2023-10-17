@@ -147,8 +147,9 @@ export default function Home() {
   })
 
   return (
-    <>
+    <div className="relative">
       <canvas></canvas>
-    </>
+      <p className="w-full text-center absolute bottom-0 text-white mb-3 text-xs">Typography Animation made by <a href="https://github.com/sujumayas" target="_blank" className="hover:underline inline ">@sujumayas</a>.</p>
+    </div>
   )
 }
