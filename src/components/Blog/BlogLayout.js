@@ -18,7 +18,9 @@ export default function BlogLayout({ children }) {
         <div className='w-screen min-h-screen flex flex-col items-center justify-between'>
             <Navbar />
             <div className="container w-full mt-[calc(var(--blog-nav-size)+1.5rem)]">
-                { children }
+                <div className='mx-3 md:mx-0'>
+                    { children }
+                </div>
             </div>
             <Footer />
         </div>

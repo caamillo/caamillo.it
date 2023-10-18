@@ -1,4 +1,23 @@
 /** @type {import('tailwindcss').Config} */
+const plugin = require('tailwindcss/plugin')
+
+const scrollbarHide = plugin(function ({addUtilities}) {
+  addUtilities({
+      '.hide-scrollbars': {
+          /* IE and Edge */
+          '-ms-overflow-style': 'none',
+
+          /* Firefox */
+          'scrollbar-width': 'none',
+
+          /* Safari and Chrome */
+          '&::-webkit-scrollbar': {
+              display: 'none'
+          }
+      },
+  }, ['responsive'])
+})
+
 module.exports = {
   content: [
     './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
@@ -16,6 +35,7 @@ module.exports = {
   },
   plugins: [
     require('postcss-100vh-fix'),
-    require('@tailwindcss/typography')
+    require('@tailwindcss/typography'),
+    scrollbarHide
   ],
 }

@@ -12,7 +12,7 @@ import BlogLayout from '@/components/Blog/BlogLayout'
 export default function Post({ post }) {
     return (
         <BlogLayout>
-            <div className='bg-white p-5 rounded-lg shadow-sm mx-3'>
+            <div className='bg-white p-5 rounded-lg shadow-sm'>
                 <h1 className='text-4xl font-bold'>{ post.title }</h1>
                 <h2 className='text-xl font-medium'>{ post.description }</h2>
                 <div className='mt-3'>
@@ -46,7 +46,7 @@ export default function Post({ post }) {
                 </div>
             </div>
             <div className='w-full flex justify-center my-5'>
-                <Link href='/blog' className='bg-slate-300 font-medium text-lg mx-3 text-center w-full lg:w-auto rounded-lg lg:px-10 py-2 text-slate-600'>Go Back</Link>
+                <Link href='/blog' className='bg-slate-300 font-medium text-lg text-center w-full lg:w-auto rounded-lg lg:px-10 py-2 text-slate-600'>Go Back</Link>
             </div>
         </BlogLayout>
     )
