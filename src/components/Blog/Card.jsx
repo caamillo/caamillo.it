@@ -1,6 +1,5 @@
 // React
 import Link from "next/link"
-import Image from "next/image"
 
 // Components
 import Badge from "./Badge"
@@ -9,10 +8,8 @@ import BadgeScroller from "./BadgeScroller"
 export default function Card({ post }) {
     return (
         <li className='w-full md:w-[400px] xl:w-[500px] rounded-lg bg-white shadow-sm md:mx-0'>
-            <Image
+            <img
                 src={`/blog/post/${ post.image }`}
-                width={ 500 }
-                height={ 500 }
                 className="rounded-tl-lg rounded-tr-lg w-full h-[300px] bg-slate-300 object-cover"
                 alt="Post image"
             />
