@@ -1,8 +1,5 @@
 import { useState, useEffect, useRef } from "react"
 
-const isNear = (x, y, threshold = 1) =>
-    Math.abs((x - y) / x) * 100 < threshold
-
 export default function BadgeScroller({ children }) {
 
     const [ isRightEnd, setIsRightEnd ] = useState(false)
@@ -10,10 +7,10 @@ export default function BadgeScroller({ children }) {
     const scrollRef = useRef()
 
     const handleScroll = (e) => {
-        if (e.target.scrollLeft === 0) setIsLeftEnd(true)
+        if (e.target.scrollLeft <= 0) setIsLeftEnd(true)
         else setIsLeftEnd(false)
 
-        if (isNear(e.target.scrollLeft + e.target.offsetWidth, e.target.scrollWidth)) setIsRightEnd(true)
+        if (e.target.scrollLeft + e.target.offsetWidth >= e.target.scrollWidth - 1) setIsRightEnd(true)
         else setIsRightEnd(false)
     }
 

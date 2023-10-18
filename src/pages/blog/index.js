@@ -23,6 +23,7 @@ export default function Blog({ posts }) {
 
 export async function getServerSideProps() {
     const posts = await prisma.post.findMany({})
+    console.log(posts)
     return {
         props: {
             posts: JSON.parse(JSON.stringify(posts))

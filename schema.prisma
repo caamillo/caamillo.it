@@ -16,6 +16,7 @@ model Post {
     content     String
     tags        String[]
     author      String @default("Matteo Camillo Ludovico")
+    image       String?
     createdAt   DateTime @default(now())
 }
 

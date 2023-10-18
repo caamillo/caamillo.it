@@ -1,5 +1,6 @@
 // React
 import Link from 'next/link'
+import Image from 'next/image'
 
 // Deps
 import { MdPreview, MdCatalog } from 'md-editor-rt';

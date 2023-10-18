@@ -10,8 +10,10 @@ export default function Card({ post }) {
     return (
         <li className='w-full md:w-[400px] xl:w-[500px] rounded-lg bg-white shadow-sm md:mx-0'>
             <Image
-                src={ post.image }
-                className="rounded-tl-lg rounded-tr-lg w-full h-[300px] bg-slate-300"
+                src={`/blog/post/${ post.image }`}
+                width={ 500 }
+                height={ 500 }
+                className="rounded-tl-lg rounded-tr-lg w-full h-[300px] bg-slate-300 object-cover"
                 alt="Post image"
             />
             <div className="p-5 flex flex-col justify-between h-auto min-h-[300px] md:min-h-auto md:h-[300px] xl:h-[250px]">
