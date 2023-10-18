@@ -35,7 +35,6 @@ canvas {
 
 @supports (-webkit-touch-callout: none) {
   .h-screen {
-    /* The hack for Safari */
     height: -webkit-fill-available;
   }
 }
