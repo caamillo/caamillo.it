@@ -1,3 +1,4 @@
+git stash # Removing chmod edit
 git pull
 npm i
 npx prisma db push
