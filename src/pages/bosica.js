@@ -81,6 +81,12 @@ export default function Bosica() {
                         />
                     )
                 }
+                {
+                    !cards.length > 0 &&
+                    <div>
+                        Suca
+                    </div>
+                }
             </Stack>
         </main>
     )
