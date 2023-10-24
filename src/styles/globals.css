@@ -38,3 +38,43 @@ canvas {
     height: -webkit-fill-available;
   }
 }
+
+.stack > :nth-child(1) {
+  position: relative;
+  z-index: 10;
+}
+
+.stack > *:not(:nth-child(1)) {
+  position: absolute;
+  z-index: 0;
+}
+
+.stack > :nth-child(2) {
+  position: absolute;
+  transform: translate3d(0px, -10px, -32px);
+  z-index: 5;
+}
+
+.stack > :nth-child(3) {
+  position: absolute;
+  transform: translate3d(0px, -20px, -64px);
+  opacity: .75;
+}
+
+.stack > :nth-child(4) {
+  position: absolute;
+  transform: translate3d(0px, -30px, -128px);
+  opacity: .50;
+}
+
+.stack > :nth-child(5) {
+  position: absolute;
+  transform: translate3d(0px, -40px, -160px);
+  opacity: .25;
+}
+
+.stack > :nth-child(6) {
+  position: absolute;
+  transform: translate3d(0px, -50px, -192px);
+  opacity: 0;
+}

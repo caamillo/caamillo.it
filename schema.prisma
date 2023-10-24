@@ -25,3 +25,12 @@ model Bodycount {
     value       Int
     createdAt   DateTime @default(now())
 }
+
+model Bosica {
+    id          String @id @default(auto()) @map("_id") @db.ObjectId
+    nome        String
+    eta         Int
+    lavoro      String
+    distanza    Float
+    img         String
+}
