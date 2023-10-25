@@ -1,5 +1,5 @@
 // React
-import { useState,useEffect } from "react"
+import { useState,useEffect, useRef } from "react"
 
 // Deps
 import prisma from "@/lib/prisma"
@@ -17,14 +17,40 @@ export default function Bosica() {
     const [currCard, setCurrCard] = useState()
     const [smashs, setSmashs] = useLocalStorage('smashs', [])
     const [passes, setPasses] = useLocalStorage('passes', [])
+    const [smashCards, setSmashCards] = useState([])
+    const [passCards, setPassCards] = useState([])
+    const reloadBtn = useRef()
 
     useEffect(() => {
-        if (!cards) return
-        console.log(cards)
+        if (!cards.length) {
+            if (reloadBtn.current && (smashs.length || passes.length)) {
+                reloadBtn.current.removeAttribute('data-hidden')
+                fetch('/api/bosica/getppl', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        take: {
+                            smashs: smashs,
+                            passes: passes
+                        }
+                    })
+                })
+                    .then(res => res.json())
+                    .then(({ smashs, passes }) => {
+                        setSmashCards(smashs)
+                        setPassCards(passes)
+                    })
+            }
+            return
+        }
+        if (reloadBtn.current) reloadBtn.current.setAttribute('data-hidden', '')
         setCurrCard(cards[0]?.id)
     }, [cards])
 
     useEffect(() => {
+        document.body.style.background = '#e7e7e7'
         fetch('/api/bosica/getppl', {
             method: 'POST',
             headers: {
@@ -41,8 +67,8 @@ export default function Bosica() {
     }, [])
 
     const onFinish = (won) => {
-        if (won) setSmashs(smashs => [ ...smashs, cards[0] ])
-        else setPasses(passes => [ ...passes, cards[0] ])
+        if (won) setSmashs(smashs => [ ...smashs, cards[0].id ])
+        else setPasses(passes => [ ...passes, cards[0].id ])
         
         fetch('/api/bosica/getppl', {
             method: 'POST',
@@ -52,7 +78,7 @@ export default function Bosica() {
             body: JSON.stringify({
                 smashs: smashs,
                 passes: passes,
-                stack: cards,
+                stack: cards.map(el => el.id),
                 limit: 1
             })
         })
@@ -65,7 +91,7 @@ export default function Bosica() {
     }
 
     return (
-        <main className="w-screen h-screen flex justify-center relative items-center bg-[#e7e7e7] select-none overflow-hidden">
+        <main className="w-screen min-h-screen py-5 flex justify-center relative items-center bg-[#e7e7e7] select-none overflow-hidden">
             <Stack>
                 {
                     cards.map(({ id, nome, eta, lavoro, distanza, img }) =>
@@ -81,13 +107,76 @@ export default function Bosica() {
                         />
                     )
                 }
-                {
-                    !cards.length > 0 &&
-                    <div>
-                        Suca
-                    </div>
-                }
             </Stack>
+            {
+                !cards.length > 0 &&
+                <div className="container space-y-10 mb-20">
+                    <div>
+                        <h2 className="text-2xl font-medium mb-3 text-slate-700">Smashed</h2>
+                        <div className="flex space-x-5 overflow-x-scroll pb-3">
+                            {
+                                smashCards?.map(({ id, nome, eta, lavoro, distanza, img }) =>
+                                    <Card
+                                        nome={ nome }
+                                        età={ eta }
+                                        lavoro={ lavoro }
+                                        distanza={ distanza }
+                                        immagine={ img }
+                                        onFinish={ onFinish }
+                                        shadow={ false }
+                                        key={ 'card-sm-' + id }
+                                    />
+                                )
+                            }
+                            {
+                                !smashCards.length &&
+                                <p>(No one)</p>
+                            }
+                        </div>
+                    </div>
+                    <div>
+                        <h2 className="text-2xl font-medium mb-3 text-slate-700">Passed</h2>
+                        <div className="flex space-x-5 overflow-x-scroll pb-3">
+                            {
+                                passCards?.map(({ id, nome, eta, lavoro, distanza, img }) =>
+                                    <Card
+                                        nome={ nome }
+                                        età={ eta }
+                                        lavoro={ lavoro }
+                                        distanza={ distanza }
+                                        immagine={ img }
+                                        onFinish={ onFinish }
+                                        shadow={ false }
+                                        key={ 'card-sm-' + id }
+                                    />
+                                )
+                            }
+                            {
+                                !passCards.length &&
+                                <p>(No one)</p>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+            <button ref={ reloadBtn } onClick={() => {
+                setSmashs([])
+                setPasses([])
+                fetch('/api/bosica/getppl', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        smashs: [],
+                        passes: [],
+                        limit: CHUNK_WRAPPER
+                    })
+                })
+                    .then(res => res.json())
+                    .then(data => setCards(data))
+            }} data-hidden className="bg-slate-400 text-slate-100 px-5 py-2 rounded-md font-medium text-xl
+            absolute bottom-5 left-1/2 -translate-x-1/2 shadow-xl cursor-pointer transition-all data-[hidden]:opacity-0 data-[hidden]:pointer-events-none data-[hidden]:translate-y-10 ease-in-out duration-500">Reload</button>
         </main>
     )
 }

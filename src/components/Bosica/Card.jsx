@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react"
 // Deps
 import { useMediaQuery } from 'usehooks-ts'
 
-const Card = ({ nome, età, lavoro, distanza, immagine, onFinish, isActive=false }) => {
+const Card = ({ nome, età, lavoro, distanza, immagine, onFinish, shadow=true, isActive=false }) => {
 
     const isMobile = useMediaQuery('(max-width: 768px)')
 
@@ -90,9 +90,9 @@ const Card = ({ nome, età, lavoro, distanza, immagine, onFinish, isActive=false
             ref={ card }
             onMouseDown={ () => !isMobile && isActive ? setIsDragging(true) : '' }
             onTouchStart={ () => isMobile && isActive ? setIsDragging(true) : '' }
-            className="w-[350px] space-y-5 transition-all"
+            className="min-w-[350px] space-y-5 transition-all"
         >
-            <div className="relative w-full h-[550px] rounded-lg overflow-hidden shadow-xl">
+            <div className={`relative w-full h-[550px] rounded-lg overflow-hidden ${ shadow ? 'shadow-xl' : '' }`}>
                 <div className={`absolute z-40 w-full h-full transition-all flex justify-center items-center duration-500 ${ cardState !== 0 ? 'backdrop-blur-lg' : '' } ${ cardState === -1 ? 'bg-[#a0121250]' : cardState === 1 ? 'bg-[#37e94650]' : '' }`}>
                     <span className="text-5xl font-bold text-white tracking-wide">{ cardState === 1 ? 'SMASH' : cardState === -1 ? 'PASS' : '' }</span>
                 </div>

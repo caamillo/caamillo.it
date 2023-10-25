@@ -53,28 +53,43 @@ canvas {
   position: absolute;
   transform: translate3d(0px, -10px, -32px);
   z-index: 5;
+  animation: cardAnim .5s;
 }
 
 .stack > :nth-child(3) {
   position: absolute;
   transform: translate3d(0px, -20px, -64px);
   opacity: .75;
+  z-index: 4;
+  animation: cardAnim 1s;
 }
 
 .stack > :nth-child(4) {
   position: absolute;
   transform: translate3d(0px, -30px, -128px);
   opacity: .50;
+  z-index: 3;
+  animation: cardAnim 1.5s;
 }
 
 .stack > :nth-child(5) {
   position: absolute;
   transform: translate3d(0px, -40px, -160px);
   opacity: .25;
+  z-index: 2;
+  animation: cardAnim 2s;
 }
 
 .stack > :nth-child(6) {
   position: absolute;
   transform: translate3d(0px, -50px, -192px);
   opacity: 0;
+  z-index: 1;
+  animation: cardAnim 2.5s;
+}
+
+@keyframes cardAnim {
+  from {
+    transform: translateY(0px);
+  }
 }
