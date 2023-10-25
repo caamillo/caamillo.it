@@ -109,7 +109,7 @@ export default function Bosica() {
                 }
             </Stack>
             {
-                !cards.length > 0 &&
+                !cards.length > 0 && (!!smashCards.length || !!passCards.length) &&
                 <div className="container space-y-10 mb-20">
                     <div>
                         <h2 className="text-2xl font-medium mb-3 text-slate-700">Smashed</h2>
