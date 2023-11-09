@@ -7,7 +7,7 @@ import Head from 'next/head';
 import { MdPreview, MdCatalog } from 'md-editor-rt';
 import 'md-editor-rt/lib/preview.css';
 import prisma from '@/lib/prisma'
-import { useLocalStorage } from 'usehooks-ts';
+import { useLocalStorage, useMediaQuery } from 'usehooks-ts';
 
 // Components
 import BlogLayout from '@/components/Blog/BlogLayout'
@@ -15,12 +15,18 @@ import BlogLayout from '@/components/Blog/BlogLayout'
 export default function Post({ post }) {
 
     const [ nsfw, setNsfw ] = useLocalStorage('nsfw', false)
+    const isMobile = useMediaQuery('(max-width: 768px)')
     const nsfwModalRef = useRef()
 
     useEffect(() => {
         if (!nsfw && post.tags.filter(tag => tag.toLowerCase() === 'nsfw').length) setTimeout(() => nsfwModalRef.current?.setAttribute('data-show', 'true'), 5e2)
         else nsfwModalRef.current?.setAttribute('data-show', 'false')
     }, [ nsfw ])
+
+    useEffect(() => {
+        if (!isMobile) document.querySelector(':root').style.setProperty('--blog-modal-y', '-150%')
+        else document.querySelector(':root').style.setProperty('--blog-modal-y', '-80vh')
+    }, [ isMobile ])
 
     return (
         <BlogLayout>

@@ -4,6 +4,7 @@
 
 :root {
   --blog-nav-size: 80px;
+  --blog-modal-y: -100vh;
 }
 
 canvas {
@@ -105,7 +106,7 @@ canvas {
 }
 
 .nsfw-warning[data-show="false"] .warning-modal {
-  transform: translateY(-100vh);
+  transform: translateY(var(--blog-modal-y));
 }
 
 #preview-only-preview > * {
