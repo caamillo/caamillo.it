@@ -1,8 +1,9 @@
-// Deps
-import prisma from '@/lib/prisma'
-
 // React
 import { useEffect } from "react"
+import Head from "next/head";
+
+// Deps
+import prisma from '@/lib/prisma'
 
 const getTimeAgo = (date) => {
     const now = new Date();
@@ -31,6 +32,21 @@ export default function Bodycounts({ bodycount }) {
 
     return (
         <div className="w-screen h-screen flex flex-col justify-between items-center relative bg-[#352F44] text-[#FAF0E6]">
+            <Head>
+                <title>Bodycounts</title>
+                <meta name="title" content="Bodycounts" />
+                <meta name="description" content="A useless site for keeping track of bodycounts" />
+
+                <meta property="og:type" content="website" />
+                <meta property="og:url" content="https://caamillo.it/bodycounts" />
+                <meta property="og:title" content="Bodycounts" />
+                <meta property="og:description" content="A useless site for keeping track of bodycounts" />
+
+                <meta property="twitter:card" content="summary_large_image" />
+                <meta property="twitter:url" content="https://caamillo.it/bodycounts/" />
+                <meta property="twitter:title" content="Bodycounts" />
+                <meta property="twitter:description" content="A useless site for keeping track of bodycounts" />
+            </Head>
             <p className="mt-3 text-lg tracking-wider font-medium">Bodycounts</p>
             <div className='h-[100px] w-[200px] flex items-center justify-center relative overflow-hidden'>
                 <div className={`absolute top-0 left-1/2 text-center ${ Object.keys(bodycount).length > 0 ? 'cels' : '-translate-x-1/2' }`}>

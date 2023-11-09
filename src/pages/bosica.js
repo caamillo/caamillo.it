@@ -1,5 +1,6 @@
 // React
-import { useState,useEffect, useRef } from "react"
+import { useState, useEffect, useRef } from "react"
+import Head from "next/head"
 
 // Deps
 import prisma from "@/lib/prisma"
@@ -92,6 +93,21 @@ export default function Bosica() {
 
     return (
         <main className="w-screen min-h-screen py-5 flex justify-center relative items-center bg-[#e7e7e7] select-none overflow-hidden">
+            <Head>
+                <title>Bosica</title>
+                <meta name="title" content="Bosica" />
+                <meta name="description" content="Recreating a tinder-like system" />
+
+                <meta property="og:type" content="website" />
+                <meta property="og:url" content="https://caamillo.it/bosica/" />
+                <meta property="og:title" content="Bosica" />
+                <meta property="og:description" content="Recreating a tinder-like system" />
+
+                <meta property="twitter:card" content="summary_large_image" />
+                <meta property="twitter:url" content="https://caamillo.it/bosica/" />
+                <meta property="twitter:title" content="Bosica" />
+                <meta property="twitter:description" content="Recreating a tinder-like system" />
+            </Head>
             <Stack>
                 {
                     cards.map(({ id, nome, eta, lavoro, distanza, img }) =>

@@ -1,4 +1,6 @@
+// React
 import { useEffect, useState } from "react"
+import Head from "next/head"
 
 export default function Home() {
 
@@ -148,6 +150,21 @@ export default function Home() {
 
   return (
     <div className="relative">
+      <Head>
+          <title>caamillo</title>
+          <meta name="title" content="caamillo" />
+          <meta name="description" content="A useless website" />
+
+          <meta property="og:type" content="website" />
+          <meta property="og:url" content="https://caamillo.it/" />
+          <meta property="og:title" content="caamillo" />
+          <meta property="og:description" content="A useless website" />
+
+          <meta property="twitter:card" content="summary_large_image" />
+          <meta property="twitter:url" content="https://caamillo.it/bosica/" />
+          <meta property="twitter:title" content="caamillo" />
+          <meta property="twitter:description" content="A useless website" />
+      </Head>
       <canvas></canvas>
       <p className="w-full text-center absolute bottom-0 text-white mb-3 text-xs">Typography Animation made by <a href="https://github.com/sujumayas" target="_blank" className="hover:underline inline ">@sujumayas</a>.</p>
     </div>

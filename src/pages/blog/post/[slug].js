@@ -1,6 +1,7 @@
 // React
 import { useEffect, useRef } from 'react';
 import Link from 'next/link'
+import Head from 'next/head';
 
 // Deps
 import { MdPreview, MdCatalog } from 'md-editor-rt';
@@ -23,6 +24,21 @@ export default function Post({ post }) {
 
     return (
         <BlogLayout>
+            <Head>
+                <title>FemboyBlog | { post.title }</title>
+                <meta name="title" content={`FemboyBlog | ${ post.title }`} />
+                <meta name="description" content={`FemboyBlog | ${ post.description }`} />
+
+                <meta property="og:type" content="website" />
+                <meta property="og:url" content={`https://caamillo.it/blog/${ post.id }`} />
+                <meta property="og:title" content={`FemboyBlog | ${ post.title }`} />
+                <meta property="og:description" content={`FemboyBlog | ${ post.description }`} />
+
+                <meta property="twitter:card" content="summary_large_image" />
+                <meta property="twitter:url" content={`https://caamillo.it/blog/${ post.id }`} />
+                <meta property="twitter:title" content={`FemboyBlog | ${ post.title }`} />
+                <meta property="twitter:description" content={`FemboyBlog | ${ post.description }`} />
+            </Head>
             <div ref={ nsfwModalRef } data-show="false" className="nsfw-warning w-full h-full fixed top-0 left-0 duration-500 z-[999999] transition-all">
                 <div className='absolute top-0 left-1/2 -translate-x-1/2 container flex justify-center'>
                     <div className='warning-modal transition-transform duration-1000 ease-in-out bg-white w-full lg:w-2/3 xl:w-1/2 p-5 rounded-lg mt-10 mx-3 border-2 border-slate-300 flex flex-col items-center text-center'>
