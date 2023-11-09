@@ -108,6 +108,6 @@ canvas {
   transform: translateY(-150%);
 }
 
-#preview-only-preview {
+#preview-only-preview > * {
   word-break: normal;
 }
