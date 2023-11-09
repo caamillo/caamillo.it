@@ -93,3 +93,17 @@ canvas {
     transform: translateY(0px);
   }
 }
+
+.nsfw-warning[data-show="true"] {
+  background-color: #00000070;
+  backdrop-filter: blur(12px);
+  pointer-events: all;
+}
+
+.nsfw-warning[data-show="false"] {
+  pointer-events: none;
+}
+
+.nsfw-warning[data-show="false"] .warning-modal {
+  transform: translateY(-150%);
+}
