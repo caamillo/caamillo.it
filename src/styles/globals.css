@@ -107,3 +107,7 @@ canvas {
 .nsfw-warning[data-show="false"] .warning-modal {
   transform: translateY(-150%);
 }
+
+#preview-only-preview {
+  word-break: normal;
+}
