@@ -95,7 +95,6 @@ export default function Home() {
       canvas.height = window.innerHeight;
       ctx.fillStyle = 'red';
       const maxLengthWord = Math.max(...(phrase + ' FEMBOYS').split(' ').map(el => el.length))
-      console.log(size / maxLengthWord)
       ctx.font = `italic bold ${ (size / maxLengthWord) + VIEW_OFFSET }px Noto Serif`; // Font size = (DYNscreenSize / maxLengthWord) - OFFSET
       ctx.fillText(keyword, canvas.width / 2 - ctx.measureText(keyword).width / 2, canvas.height / 2 + 100);
       var idata = ctx.getImageData(0, 0, canvas.width, canvas.height);
@@ -151,7 +150,6 @@ export default function Home() {
   return (
     <div className="relative">
       <Head>
-          <title>caamillo</title>
           <meta name="title" content="caamillo" />
           <meta name="description" content="A useless website" />
 
