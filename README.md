@@ -14,7 +14,7 @@ I also wrote some api that I will use in this website [api.caamillo.it](https://
 
 - `/blog` a stupid blog, handled with [prisma studio](https://www.prisma.io/studio)
 - `/bosica` a fullstack tinder-like bosica app
-- [WIP] _`/domains` a fullstack app to search domain availability including some tools like custom search, advanced search, cum..._
+- `/domains` <b>[WIP]</b> _a fullstack app to search domain availability including some tools like custom search, advanced search, cum..._
 
 ## Why don't I use TypeScript?
 
