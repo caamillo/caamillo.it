@@ -6,6 +6,7 @@ A website created to showcase some fullstack works, using:
 - [MongoDB](https://www.mongodb.com/) as db
 - [Prisma](https://www.prisma.io/) as MongoDB ORM
 - [Tailwind](https://tailwindcss.com/) as (best) css framework
+- [Docker](https://www.docker.com/) as mongo docker-container
 
 I also wrote some api that I will use in this website [api.caamillo.it](https://github.com/caamillo/api.caamillo.it/)
 
