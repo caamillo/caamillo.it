@@ -10,8 +10,11 @@ export default function Stack({ children, errors, maxStack=3, className }) {
 
     const stackRef = useRef()
     const [ stack, setStack ] = useState([ ...errors ])
+    const [ isUpdating, setIsUpdating ] = useState(false)
+    const [ haveErrorsChanged, setHaveErrorsChanged ] = useState(false)
     
     useEffect(() => {
+        setHaveErrorsChanged(true)
         setStack(
             [ ...errors ].slice(-maxStack - 1).reverse().map((error, idx) => {
                 return {
@@ -25,8 +28,12 @@ export default function Stack({ children, errors, maxStack=3, className }) {
     const getOpacity = (idx, n, max) =>
         n - max > 0 ? idx >= n - max ? idx / max : 0 : (idx + 1) / n
 
+    useEffect(() => {console.log(haveErrorsChanged)}, [haveErrorsChanged])
+
     useEffect(() => {
-        if (!stackRef.current || !stack.every(error => error.idx !== undefined)) return
+        if (!stackRef.current || !stack.every(error => error.idx !== undefined) || isUpdating || !haveErrorsChanged) return
+        setIsUpdating(true)
+        setHaveErrorsChanged(false)
         cachedStack = [ ...stack ].reverse().map((el, idx) => {
             let newElement = el
             if (cachedStack[idx]?.lastpos === undefined) newElement.lastpos = -1
@@ -60,16 +67,17 @@ export default function Stack({ children, errors, maxStack=3, className }) {
             }
             if (cachedStack.length < maxStack + 1) cachedStack[idx].lastpos += 1
         })
-    }, [ stack ])
+        setTimeout(() => setIsUpdating(false), 500)
+    }, [ stack, isUpdating ])
 
     return (
         <div ref={ stackRef } className={ 'w-[300px] ' + className }>
             {
-                stack.map(({ title }, idx) =>
+                stack.map(({ title, description }, idx) =>
                     <Toast
                         key={ 'err-' + idx }
                         title={ title }
-                        desc={ 'Test Description' }
+                        desc={ description }
                         idx={ idx }
                     />
                 )
