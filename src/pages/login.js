@@ -1,10 +1,12 @@
 // React
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 
 // Lib
 import ErrorManager from '../components/Error'
 
 export default function login () {
+
+    const [ errors, setErrors ] = useState([])
 
     const getAccess = () => {
 
@@ -30,7 +32,7 @@ export default function login () {
                     <button className="w-full p-5 bg-[#352F44] text-xl rounded-lg text-white">Login</button>
                 </div>
             </div>
-            <ErrorManager />
+            <ErrorManager errors={ errors } />
         </div>
     )
 }

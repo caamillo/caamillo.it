@@ -112,3 +112,7 @@ canvas {
 #preview-only-preview > * {
   word-break: normal;
 }
+
+.toast-hide {
+  opacity: 0 !important;
+}
