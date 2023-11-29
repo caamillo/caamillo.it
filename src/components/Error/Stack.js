@@ -6,10 +6,10 @@ import Toast from './Toast'
 
 let cachedStack = []
 
-export default function Stack({ children, errors, maxStack=3, className }) {
+export default function Stack({ errors, setErrors, maxStack=3, className }) {
 
     const stackRef = useRef()
-    const [ stack, setStack ] = useState(errors?.length ? [ ...errors ] : [])
+    const [ stack, setStack ] = useState([ ...errors ])
     const [ isUpdating, setIsUpdating ] = useState(false)
     const [ haveErrorsChanged, setHaveErrorsChanged ] = useState(false)
     const TOAST_LIFESPAN = 3 // 3 seconds
@@ -17,8 +17,9 @@ export default function Stack({ children, errors, maxStack=3, className }) {
     useEffect(() => {
         if (!errors.length) return
         setHaveErrorsChanged(true)
+        // console.log(stack)
         setStack(
-            [ errors?.length ? [ ...errors ] : [] ].slice(-maxStack - 1).reverse().map((error, idx) => {
+            [ ...errors ].slice(-maxStack - 1).reverse().map((error, idx) => {
                 return {
                     ...error,
                     idx: idx,
@@ -39,7 +40,14 @@ export default function Stack({ children, errors, maxStack=3, className }) {
                 const element = [ ...stackRef.current.children ].reverse()[ idx ]
                 const born = reversedStack[idx].born
                 const diff = Math.abs(now - born) / 1e3 // Diff in secs
-                if (diff >= TOAST_LIFESPAN) element.classList.add('toast-hide')
+                if (diff >= TOAST_LIFESPAN) {
+                    element.classList.add('toast-hide')
+                    setErrors([])
+                    setTimeout(() => {
+                        setStack([])
+                        cachedStack = []
+                    }, 5e2)
+                }
             }
         }, 1000)
         return () => clearInterval(i)
@@ -55,10 +63,9 @@ export default function Stack({ children, errors, maxStack=3, className }) {
             else newElement.lastpos = cachedStack[idx].lastpos
             return newElement
         })
-        cachedStack.map((error, idx) => {
+        cachedStack.map((_, idx) => {
             const element = [ ...stackRef.current.children ].reverse()[ idx ]
             const lastpos = cachedStack[idx].lastpos
-            element.classList.remove('toast-hide')
             if (lastpos >= 0) {
                 const fromOpacity = getOpacity(idx + 1, cachedStack.length, maxStack)
                 const toOpacity = getOpacity(idx, cachedStack.length, maxStack)
