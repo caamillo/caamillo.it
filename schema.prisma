@@ -1,36 +1,35 @@
-// schema.prisma
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-    provider = "mongodb"
-    url      = env("DB_URL")
-}
-
-model Post {
-    id          String @id @default(auto()) @map("_id") @db.ObjectId
-    title       String
-    description String 
-    content     String
-    tags        String[]
-    author      String @default("Matteo Camillo Ludovico")
-    image       String?
-    createdAt   DateTime @default(now())
+  provider = "mongodb"
+  url      = env("DB_URL")
 }
 
 model Bodycount {
-    id          String @id @default(auto()) @map("_id") @db.ObjectId
-    value       Int
-    createdAt   DateTime @default(now())
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt DateTime @db.Date
+  value     BigInt
 }
 
 model Bosica {
-    id          String @id @default(auto()) @map("_id") @db.ObjectId
-    nome        String
-    eta         Int
-    lavoro      String
-    distanza    Float
-    img         String
+  id       String @id @default(auto()) @map("_id") @db.ObjectId
+  distanza Float
+  eta      BigInt
+  img      String
+  lavoro   String
+  nome     String
+}
+
+model Post {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  author      String
+  content     String
+  createdAt   DateTime @db.Date
+  description String
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  image       Json?
+  tags        String[]
+  title       String
 }

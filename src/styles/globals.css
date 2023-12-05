@@ -4,7 +4,7 @@
 
 :root {
   --blog-nav-size: 80px;
-  --blog-modal-y: -100vh;
+  --modal-y: -100vh;
 }
 
 canvas {
@@ -95,18 +95,18 @@ canvas {
   }
 }
 
-.nsfw-warning[data-show="true"] {
+.modal-warning[data-show="true"] {
   background-color: #00000070;
   backdrop-filter: blur(12px);
   pointer-events: all;
 }
 
-.nsfw-warning[data-show="false"] {
+.modal-warning[data-show="false"] {
   pointer-events: none;
 }
 
-.nsfw-warning[data-show="false"] .warning-modal {
-  transform: translateY(var(--blog-modal-y));
+.modal-warning[data-show="false"] .warning-modal {
+  transform: translateY(var(--modal-y));
 }
 
 #preview-only-preview > * {

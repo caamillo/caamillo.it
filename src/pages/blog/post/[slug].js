@@ -7,26 +7,12 @@ import Head from 'next/head';
 import { MdPreview, MdCatalog } from 'md-editor-rt';
 import 'md-editor-rt/lib/preview.css';
 import prisma from '@/lib/prisma'
-import { useLocalStorage, useMediaQuery } from 'usehooks-ts';
 
 // Components
 import BlogLayout from '@/components/Blog/BlogLayout'
+import NsfwModal from '@/components/Blog/NsfwModal';
 
 export default function Post({ post }) {
-
-    const [ nsfw, setNsfw ] = useLocalStorage('nsfw', false)
-    const isMobile = useMediaQuery('(max-width: 768px)')
-    const nsfwModalRef = useRef()
-
-    useEffect(() => {
-        if (!nsfw && post.tags.filter(tag => tag.toLowerCase() === 'nsfw').length) setTimeout(() => nsfwModalRef.current?.setAttribute('data-show', 'true'), 5e2)
-        else nsfwModalRef.current?.setAttribute('data-show', 'false')
-    }, [ nsfw ])
-
-    useEffect(() => {
-        if (!isMobile) document.querySelector(':root').style.setProperty('--blog-modal-y', '-150%')
-        else document.querySelector(':root').style.setProperty('--blog-modal-y', '-80vh')
-    }, [ isMobile ])
 
     return (
         <BlogLayout>
@@ -45,18 +31,7 @@ export default function Post({ post }) {
                 <meta property="twitter:title" content={`FemboyBlog | ${ post.title }`} />
                 <meta property="twitter:description" content={`FemboyBlog | ${ post.description }`} />
             </Head>
-            <div ref={ nsfwModalRef } data-show="false" className="nsfw-warning w-full h-full fixed top-0 left-0 duration-500 z-[999999] transition-all">
-                <div className='absolute -translate-y-1/2 md:translate-y-0 top-1/2 md:top-0 left-1/2 -translate-x-1/2 container flex justify-center'>
-                    <div className='warning-modal transition-transform duration-1000 ease-in-out bg-white w-full lg:w-2/3 xl:w-1/2 p-5 rounded-lg md:mt-10 mx-3 border-2 border-slate-300 flex flex-col items-center text-center'>
-                        <h2 className='font-bold text-3xl'>Warning</h2>
-                        <p className='text-lg md:text-xl mt-1'>This post may includes some <i className=' text-slate-600 font-semibold'>#NSFW</i> content.<br/>Are you sure to proceed?</p>
-                        <div className='grid md:grid-cols-2 w-full mt-5 gap-3 md:gap-5'>
-                            <Link href='/blog' className='border-2 border-slate-300 text-slate-900  rounded-lg py-4 order-1 font-semibold'>Go Back</Link>
-                            <button onClick={ () => setNsfw(true) } className='bg-slate-900 text-white border-2 border-slate-900 rounded-lg py-4 md:order-2 font-semibold'>Sure.</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <NsfwModal tags={ post.tags } />
             <div className='bg-white p-5 rounded-lg shadow-sm'>
                 <h1 className='text-4xl font-bold'>{ post.title }</h1>
                 <h2 className='text-xl font-medium'>{ post.description }</h2>

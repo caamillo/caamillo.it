@@ -8,7 +8,7 @@ import Switch from "@/components/Lil/Switch"
 // Deps
 import { useLocalStorage } from "usehooks-ts"
 
-export default function login () {
+export default function login() {
 
     const [ errors, setErrors ] = useState([])
     const [ token, setToken ] = useLocalStorage('token', '') // Shut up, i will use local-storage because yes
@@ -34,7 +34,7 @@ export default function login () {
     const getAccess = () => {
         const [ sName, sSecret ] = [
             name.current.value.trim(),
-            secret.current.value.trim()
+            secret.current.value
         ]
 
         if (!sName || !sSecret) return setErrors(errors =>
@@ -78,14 +78,16 @@ export default function login () {
                         <p className="text-xl">SECRET_PW:</p>
                         <input type="text" ref={ secret } defaultValue='NOT REQUIRED' disabled className="w-full p-3 italic border-2 rounded-lg text-xl disabled:text-slate-500  disabled:border-[#00000020] disabled:bg-[#00000020]" />
                     </div>
-                    <Switch
-                        callback={ switchCallback }
-                        options={[
-                            'guest',
-                            'admin'
-                        ]}
-                    />
-                    <button onClick={ getAccess } className="w-full p-5 bg-[#352F44] text-xl rounded-lg text-white">Login</button>
+                    <div>
+                        <Switch
+                            callback={ switchCallback }
+                            options={[
+                                'guest',
+                                'admin'
+                            ]}
+                        />
+                    </div>
+                    <button onClick={ getAccess } className="w-full p-5 bg-[#352F44] text-xl font-bold shadow-md rounded-lg text-white">Login</button>
                 </div>
             </div>
             <ErrorManager errors={ errors } setErrors={ setErrors } />
