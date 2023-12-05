@@ -116,3 +116,11 @@ canvas {
 .toast-hide {
   opacity: 0 !important;
 }
+
+.modal-warning[data-show="true"].auth {
+  background: linear-gradient(0deg, #31ba31db, #31ba31aa);
+}
+
+.modal-warning[data-show="false"].auth > * {
+  opacity: 0;
+}
