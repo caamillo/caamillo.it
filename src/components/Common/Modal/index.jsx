@@ -14,7 +14,7 @@ export default function Modal({ modalRef, className, children, defaultShow="fals
     }, [ isMobile ])
 
     return (
-        <div ref={ modalRef } data-show={ defaultShow } className={`modal-warning w-full h-full fixed top-0 left-0 duration-500 z-[100] transition-all ${ className }`}>
+        <div ref={ modalRef } data-show={ defaultShow } className={`modal-warning w-full h-full fixed top-0 left-0 z-[100] duration-500 transition-all ${ className }`}>
             <div className='absolute -translate-y-1/2 md:translate-y-0 top-1/2 md:top-0 left-1/2 -translate-x-1/2 container flex justify-center'>
                 { children }
             </div>

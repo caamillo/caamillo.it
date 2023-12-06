@@ -7,7 +7,7 @@ import Modal from "../Common/Modal"
 import Wrapper from '../Common/Modal/Wrapper'
 
 // Utils
-import checkExpire from '@/utils/token'
+import { checkExpire } from '@/utils/token'
 
 // Deps
 import { useLocalStorage } from 'usehooks-ts'

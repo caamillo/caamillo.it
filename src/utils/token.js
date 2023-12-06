@@ -1,4 +1,4 @@
-const parse = (token) => {
+export const parse = (token) => {
     try {
         return JSON.parse(atob(token.split('.')[1]))
     } catch (err) {
@@ -20,7 +20,7 @@ const isValid = async (token) => {
     }
 }
 
-export default async function checkExpire(token, checkIfValid=false) {
+export const checkExpire = async (token, checkIfValid=false) => {
     if (!token) return
 
     const parsed = parse(token)

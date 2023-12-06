@@ -1,20 +1,22 @@
 // React
-import { useEffect, useState, useRef } from "react"
+import { useEffect, useState, useRef, useContext } from "react"
 import Image from "next/image"
 import Link from "next/link"
 
 // Components
-import ErrorManager from '@/components/Error'
 import Switch from "@/components/Lil/Switch"
 import Modal from "@/components/Common/Modal"
 import EmptyWrapper from "@/components/Common/Modal/EmptyWrapper"
+
+// Context
+import { GenericContext } from "@/lib/GenericContext"
 
 // Deps
 import { useLocalStorage } from "usehooks-ts"
 
 export default function login() {
 
-    const [ errors, setErrors ] = useState([])
+    const { errors, setErrors } = useContext(GenericContext)
     const [ token, setToken ] = useLocalStorage('token', '') // Shut up, I will use local-storage because yes
     const [ isGuestSelected, setIsGuestSelected ] = useState(true)
     const authenticatedRef = useRef()
@@ -80,6 +82,7 @@ export default function login() {
                             src='/icons/Modal/success.svg'
                             width='100'
                             height='100'
+                            alt='success'
                         />
                         <div className="text-start text-[#fff9e3]">
                             <h3 className="text-5xl font-bold">Great!</h3>
@@ -112,7 +115,6 @@ export default function login() {
                     <button onClick={ getAccess } className="w-full p-5 bg-[#352F44] text-xl font-bold shadow-md rounded-lg text-white">Login</button>
                 </div>
             </div>
-            <ErrorManager errors={ errors } setErrors={ setErrors } />
         </div>
     )
 }

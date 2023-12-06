@@ -119,6 +119,7 @@ canvas {
 
 .modal-warning[data-show="true"].auth {
   background: linear-gradient(0deg, #31ba31db, #31ba31aa);
+  backdrop-filter: blur(30px);
 }
 
 .modal-warning[data-show="false"].auth > * {
