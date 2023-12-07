@@ -1,29 +1,18 @@
 // React
-import { useState, useEffect, useRef } from 'react'
+import { useEffect, useRef, useContext } from 'react'
 import Link from 'next/link'
 
 // Components
 import Modal from "../Common/Modal"
 import Wrapper from '../Common/Modal/Wrapper'
 
-// Utils
-import { checkExpire } from '@/utils/token'
-
-// Deps
-import { useLocalStorage } from 'usehooks-ts'
+// Context
+import { GenericContext } from "@/lib/GenericContext"
 
 export default function ModalTokenExpired({}) {
 
-    const [ token, setToken ] = useLocalStorage('token', '')
-    const [ isTokenValid, setIsTokenValid ] = useState(true)
     const tokenExpiredRef = useRef()
-
-    useEffect(() => {
-        if (!token) return
-        (async () => {
-            setIsTokenValid(!!(await checkExpire(token)))
-        })()
-      }, [ token ])
+    const { setToken, isTokenValid, setIsTokenValid } = useContext(GenericContext)
 
       useEffect(() => {
         if (!isTokenValid) tokenExpiredRef.current?.setAttribute('data-show', 'true')

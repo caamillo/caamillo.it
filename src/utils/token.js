@@ -6,7 +6,7 @@ export const parse = (token) => {
     }
 }
 
-const isValid = async (token) => {
+export const isValid = async (token) => {
     try {
         const isValidRes = await fetch('https://api.caamillo.it/validate-token', {
             headers: {

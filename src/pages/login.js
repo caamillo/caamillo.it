@@ -11,13 +11,12 @@ import EmptyWrapper from "@/components/Common/Modal/EmptyWrapper"
 // Context
 import { GenericContext } from "@/lib/GenericContext"
 
-// Deps
-import { useLocalStorage } from "usehooks-ts"
+// Utils
+import { parse } from "@/utils/token"
 
 export default function login() {
 
-    const { errors, setErrors } = useContext(GenericContext)
-    const [ token, setToken ] = useLocalStorage('token', '') // Shut up, I will use local-storage because yes
+    const { errors, setErrors, token, setToken } = useContext(GenericContext)
     const [ isGuestSelected, setIsGuestSelected ] = useState(true)
     const authenticatedRef = useRef()
 
@@ -86,8 +85,8 @@ export default function login() {
                         />
                         <div className="text-start text-[#fff9e3]">
                             <h3 className="text-5xl font-bold">Great!</h3>
-                            <h3 className="text-4xl font-light mt-1">You are successfully authenticated.</h3>
-                            <Link className="text-xl block mt-5 w-fit border-2 border-[#fff9e3] px-3 py-1 rounded-lg" href='/hub'>Go to Hub</Link>
+                            <h3 className="text-4xl font-light mt-1">You are successfully authenticated as <span className=" font-bold" suppressHydrationWarning>{ parse(token)?.name }</span>.</h3>
+                            <Link className="text-xl block mt-5 w-fit border-2 border-[#fff9e3] px-3 py-1 rounded-lg" href='/apps'>Go to Apps</Link>
                         </div>
                     </div>
                 </EmptyWrapper>
