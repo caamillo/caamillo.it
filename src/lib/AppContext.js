@@ -1,6 +1,6 @@
 // React
 import { createContext, useState, useEffect, useContext } from "react"
-import Link from "next/link"
+import { useRouter } from "next/router"
 
 // lib
 import { GenericContext } from "./GenericContext"
@@ -9,15 +9,18 @@ import { GenericContext } from "./GenericContext"
 import { isValid, parse } from '@/utils/token'
 
 // Components
+import AppLayout from "@/components/Common/Apps/AppLayout"
 import ForceLogin from "@/components/Common/Apps/ForceLogin"
 
 const AppContext = createContext()
 
 const AppContextProvider = ({ children }) => {
 
+    const router = useRouter()
     const { token, setToken, isTokenValid, setIsTokenValid } = useContext(GenericContext)
     const [ user, setUser ] = useState()
     const [ isTokenValidated, setIsTokenValidated ] = useState(false)
+    const [ currServiceIdx, setCurrServiceIdx ] = useState(-1)
 
     useEffect(() => {
         ;(async () => {
@@ -34,12 +37,23 @@ const AppContextProvider = ({ children }) => {
         })()
     }, [ token ])
 
+    useEffect(() => {
+        switch (router.pathname.slice(6)) {
+            case 'domain':
+                return setCurrServiceIdx(0)
+            default:
+                setCurrServiceIdx(-1)
+        }
+    }, [])
+
     return (
         <>
             {
                 !!user && isTokenValidated ?
-                    <AppContext.Provider value={{ user, token, setToken }}>
-                        { children }
+                    <AppContext.Provider value={{ user, token, setToken, currServiceIdx, setCurrServiceIdx }}>
+                        <AppLayout>
+                            { children }
+                        </AppLayout>
                     </AppContext.Provider>
                 : isTokenValidated ?
                     <ForceLogin/>
