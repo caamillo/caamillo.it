@@ -7,6 +7,7 @@ export const parse = (token) => {
 }
 
 export const isValid = async (token) => {
+    if (!token) return
     try {
         const isValidRes = await fetch('https://api.caamillo.it/validate-token', {
             headers: {
@@ -29,4 +30,12 @@ export const checkExpire = async (token, checkIfValid=false) => {
     const diff = expires - new Date()
 
     return diff > 0 && (checkIfValid ? await isValid(token) : true)
+}
+
+export const logout = async (token, setToken) => {
+    if (!token) return
+
+    const res = await fetch(`https://api.caamillo.it/logout?t=${ token }`)
+    const data = await res.json()
+    if (!data.error) setToken(undefined)
 }

@@ -9,7 +9,7 @@ import Wrapper from '../Common/Modal/Wrapper'
 // Context
 import { GenericContext } from "@/lib/GenericContext"
 
-export default function ModalTokenExpired({}) {
+export default function ModalTokenExpired({ forceLogin=false }) {
 
     const tokenExpiredRef = useRef()
     const { setToken, isTokenValid, setIsTokenValid } = useContext(GenericContext)

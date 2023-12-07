@@ -14,7 +14,6 @@ export default function Switch({ options, callback, className }) {
         const children = [ ...optionsWrapper.current.children ]
         mortodifiga.current.style.width = `${ children[idx].offsetWidth + PADDING_MORTODIFIGA }px`
         const toTranslate = children.slice(0, idx).reduce((acc, curr) => acc + curr.offsetWidth + GAP_SPACE, 0)
-        console.log(children.slice(0, idx))
         mortodifiga.current.style.transform = `translateX(${ toTranslate }px)`
     }
 

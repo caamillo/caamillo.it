@@ -22,7 +22,6 @@ const GenericContextProvider = ({ children }) => {
         if (!token) return
         (async () => {
             setIsTokenValid(!!(await checkExpire(token)))
-            document.dispatchEvent(new Event('token-validated'))
         })()
       }, [ token ])
 
