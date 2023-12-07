@@ -15,29 +15,35 @@ const AppContext = createContext()
 
 const AppContextProvider = ({ children }) => {
 
-    const { token, setToken, setIsTokenValid } = useContext(GenericContext)
+    const { token, setToken, isTokenValid, setIsTokenValid } = useContext(GenericContext)
     const [ user, setUser ] = useState()
+    const [ isTokenValidated, setIsTokenValidated ] = useState(false)
 
     useEffect(() => {
         ;(async () => {
+            // console.log('tick')
             const isValidRes = await isValid(token)
 
             if (isValidRes) setUser(parse(token))
-            else setIsTokenValid(false)
+            else {
+                setIsTokenValid(false)
+                setUser(undefined) // cuz we have to reset it
+            }
 
-            document.dispatchEvent(new CustomEvent('token-validated', { result: isValidRes }))
+            setIsTokenValidated(true)
         })()
     }, [ token ])
 
     return (
         <>
             {
-                !!user ?
+                !!user && isTokenValidated ?
                     <AppContext.Provider value={{ user, token, setToken }}>
                         { children }
                     </AppContext.Provider>
-                :
+                : isTokenValidated ?
                     <ForceLogin/>
+                : <></>
             }
         </>
     )

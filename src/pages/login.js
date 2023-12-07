@@ -7,18 +7,21 @@ import Link from "next/link"
 import Switch from "@/components/Lil/Switch"
 import Modal from "@/components/Common/Modal"
 import EmptyWrapper from "@/components/Common/Modal/EmptyWrapper"
+import Wrapper from "@/components/Common/Modal/Wrapper"
 
 // Context
 import { GenericContext } from "@/lib/GenericContext"
 
 // Utils
-import { parse } from "@/utils/token"
+import { parse, logout } from "@/utils/token"
 
 export default function login() {
 
     const { errors, setErrors, token, setToken } = useContext(GenericContext)
     const [ isGuestSelected, setIsGuestSelected ] = useState(true)
+    const [ isTokenForwarded, setIsTokenForwarded ] = useState(false)
     const authenticatedRef = useRef()
+    const alreadyLoggedRef = useRef()
 
     // login-infos
     const name = useRef()
@@ -64,9 +67,15 @@ export default function login() {
                             { title: data.error, description: data.message } ]
                     )
                 setToken(data.data)
+                if (data.title === 'forward') return setIsTokenForwarded(true)
                 authenticatedRef.current.setAttribute('data-show', true)
             })
     }
+
+    useEffect(() => {
+        if (isTokenForwarded) alreadyLoggedRef.current.setAttribute('data-show', 'true')
+        else alreadyLoggedRef.current.setAttribute('data-show', 'false')
+    }, [ isTokenForwarded ])
 
     useEffect(() => {
         document.querySelector('body').style.background = 'linear-gradient(45deg, #352F44, #00000090)'
@@ -74,6 +83,30 @@ export default function login() {
 
     return (
         <div className="w-screen h-screen flex justify-center items-center">
+            <Modal modalRef={ alreadyLoggedRef }>
+                <Wrapper>
+                    <h3 className='font-bold text-3xl'>Warning</h3>
+                    <p className='text-lg md:text-xl mt-1'>It seems your previous token was not expired.</p>
+                    <p className='text-lg md:text-xl mt-1'>Want to use it back?</p>
+                    <div className='grid md:grid-cols-2 w-full mt-5 gap-3 md:gap-5'>
+                        <button onClick={
+                            () => {
+                                setIsTokenForwarded(false)
+                                setTimeout(() => {
+                                    authenticatedRef.current.setAttribute('data-show', true)
+                                }, 5e2)
+                            }
+                        } className='bg-slate-900 border-slate-900 text-white border-2 rounded-lg py-4 order-2 font-semibold'>Sure.</button>
+                        <button onClick={
+                            async () => {
+                                setIsTokenForwarded(false)
+                                await logout(token, setToken)
+                                getAccess()
+                            }
+                        } className='border-2 text-slate-900 border-slate-300 rounded-lg py-4 order-1 font-semibold'>Nope</button>
+                    </div>
+                </Wrapper>
+            </Modal>
             <Modal modalRef={ authenticatedRef } className='auth'>
                 <EmptyWrapper className='h-screen justify-center transition-opacity duration-500'>
                     <div className="flex justify-center items-center space-x-5">
