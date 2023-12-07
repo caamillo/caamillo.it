@@ -8,6 +8,9 @@ import { GenericContext } from "./GenericContext"
 // Utils
 import { isValid, parse } from '@/utils/token'
 
+// Components
+import ForceLogin from "@/components/Common/Apps/ForceLogin"
+
 const AppContext = createContext()
 
 const AppContextProvider = ({ children }) => {
@@ -16,7 +19,6 @@ const AppContextProvider = ({ children }) => {
     const [ user, setUser ] = useState()
 
     useEffect(() => {
-        console.log('token tick', token)
         ;(async () => {
             const isValidRes = await isValid(token)
 
@@ -35,7 +37,7 @@ const AppContextProvider = ({ children }) => {
                         { children }
                     </AppContext.Provider>
                 :
-                    <p>In order to get access to apps, please <Link href="/login">Login</Link> first.</p>
+                    <ForceLogin/>
             }
         </>
     )
