@@ -50,7 +50,7 @@ export default function login() {
                 [ ...errors,
                     { title: 'Error', description: 'Name or Secret is empty!' } ]
             )
-        fetch('http://localhost:5001/token', {
+        fetch('https://api.caamillo.it/token', {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json"
