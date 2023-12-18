@@ -9,7 +9,7 @@ export const parse = (token) => {
 export const isValid = async (token) => {
     if (!token) return
     try {
-        const isValidRes = await fetch('https://api.caamillo.it/validate-token', {
+        const isValidRes = await fetch(`${ process.env.NEXT_PUBLIC_API_ENDPOINT }/validate-token`, {
             headers: {
                 Authorization: `Bearer ${ token }`
             }
@@ -34,8 +34,9 @@ export const checkExpire = async (token, checkIfValid=false) => {
 
 export const logout = async (token, setToken) => {
     if (!token) return
+    console.log(token)
 
-    const res = await fetch(`https://api.caamillo.it/logout?t=${ token }`)
+    const res = await fetch(`${ process.env.NEXT_PUBLIC_API_ENDPOINT }/logout?t=${ token }`)
     const data = await res.json()
     if (!data.error) setToken(undefined)
 }
