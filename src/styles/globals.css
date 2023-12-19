@@ -125,3 +125,13 @@ canvas {
 .modal-warning[data-show="false"].auth > * {
   opacity: 0;
 }
+
+.fade-in-block {
+  animation: fadeInBlock .3s ease-in;
+}
+
+@keyframes fadeInBlock {
+  from {
+    opacity: 0;
+  }
+}

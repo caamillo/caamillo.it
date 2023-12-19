@@ -1,6 +1,9 @@
 // React
 import { useEffect, useRef, useState } from "react"
 
+// Components
+import Block from "./Block"
+
 const BLOCK_SIZE = 300 // 300 px
 const GAP_SIZE = 10 // 10 px
 
@@ -185,14 +188,15 @@ export default function GridMasonry({ data }) {
         <div ref={ wrapperRef } className="masonry-wrapper w-full">
             <div className="grid" style={{ gridTemplateAreas: gridTemplateArea, gap: `${ GAP_SIZE }px` }}>
                 {
-                    shapesToPlace?.map(({ name, size, element }) =>
-                        <div
-                            className="bg-slate-200 flex justify-center items-center rounded-md"
-                            style={{ gridArea: name, height: `${ BLOCK_SIZE * size.y }px` }}
+                    shapesToPlace?.map(({ name, size, element }, idx) =>
+                        <Block
+                            name={ name }
+                            size={ size }
+                            element={ element }
+                            blockSize={ BLOCK_SIZE }
+                            idx={ idx }
                             key={ name }
-                        >
-                            { name }
-                        </div>
+                        />
                     )
                 }
             </div>
