@@ -10,13 +10,15 @@ const GAP_SIZE = 10 // 10 px
 const SHAPES_RULES = [
     {
         id: 0, // Square
+        min: 0,
         size: {
             x: 1,
             y: 1
         }
     },
     {
-        id: 1, // Long
+        id: 1, // Long,
+        min: 2,
         size: {
             x: 2,
             y: 1
@@ -24,6 +26,7 @@ const SHAPES_RULES = [
     },
     {
         id: 2, // Tall
+        min: 2,
         size: {
             x: 1,
             y: 2
@@ -38,8 +41,8 @@ const initializedRow = (chunkSize) => {
     }
 }
 
-const generateShapesRoast = (spaceAvailable) =>
-    SHAPES_RULES.filter(({ size }) => size.x <= spaceAvailable)
+const generateShapesRoast = (chunkSize, spaceAvailable) =>
+    SHAPES_RULES.filter(({ min, size }) => size.x <= spaceAvailable && chunkSize >= min)
 
 const generateChunkSize = (wrapperWidth) =>
     Math.floor(wrapperWidth / (BLOCK_SIZE + GAP_SIZE))
@@ -77,7 +80,7 @@ const getMasonry = (chunkSize, data) => {
         const collisionIdx = row.availability.findIndex((el, elIdx) => elIdx > idx && !el)
         // console.log('collisionIdx', collisionIdx)
 
-        const shapesRoast = generateShapesRoast(collisionIdx >= 0 ? collisionIdx - idx : row.availability.length - idx)
+        const shapesRoast = generateShapesRoast(chunkSize, collisionIdx >= 0 ? collisionIdx - idx : row.availability.length - idx)
         // console.log('spaces Roast', shapesRoast)
 
         const rndShape = shapesRoast[Math.floor(Math.random() * shapesRoast.length)]
@@ -103,7 +106,6 @@ const getMasonry = (chunkSize, data) => {
         
         dataPool = dataPool.filter((el, elIdx) => elIdx) // Remove first element after draw
     }
-    // console.log('ROWS final', rows)
     return rows
 }
 
@@ -130,13 +132,14 @@ const generateGridTemplateAreaStyle = (masonry) => {
             }
         }
     }
+    console.log(areaTemplate.map(row => row.join(' ')).map(row => `"${ row }"`).join('\n'))
     return [
         areaTemplate.map(row => row.join(' ')).map(row => `"${ row }"`).join('\n'),
         shapesToPlace
     ]
 }
 
-export default function GridMasonry({ data }) {
+export default function GridMasonry({ data, theme, loaded, addLoaded }) {
 
     const wrapperRef = useRef()
     const [ wrapperWidth, setWrapperWidth ] = useState()
@@ -185,8 +188,8 @@ export default function GridMasonry({ data }) {
     })
 
     return (
-        <div ref={ wrapperRef } className="masonry-wrapper w-full">
-            <div className="grid" style={{ gridTemplateAreas: gridTemplateArea, gap: `${ GAP_SIZE }px` }}>
+        <div className="w-full flex justify-center">
+            <div ref={ wrapperRef } className="grid mx-2 container" style={{ gridTemplateAreas: gridTemplateArea, gap: `${ GAP_SIZE }px` }}>
                 {
                     shapesToPlace?.map(({ name, size, element }, idx) =>
                         <Block
@@ -195,6 +198,9 @@ export default function GridMasonry({ data }) {
                             element={ element }
                             blockSize={ BLOCK_SIZE }
                             idx={ idx }
+                            Theme={ theme }
+                            loaded={ loaded }
+                            addLoaded={ addLoaded }
                             key={ name }
                         />
                     )

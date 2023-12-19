@@ -1,28 +1,21 @@
+// React
 import { useState, useEffect } from "react"
 
-const INTERVAL_WAIT = 100
+// Theme
+import Default from "./Themes/Default"
 
-export default function Block({ name, size, element, blockSize, idx }) {
-
-    const [ isReady, setIsReady ] = useState(false)
-
-    useEffect(() => {
-        setTimeout(() => {
-            setIsReady(true)
-        }, 5e2 + (100 * idx))
-    }, [])
+export default function Block({ name, size, element, blockSize, idx, Theme, loaded, addLoaded }) {
 
     return (
-        <>
+        <div
+            className="fade-in-block bg-slate-200 flex justify-center items-center rounded-md"
+            style={{ gridArea: name, minWidth: `${ blockSize * size.x }px`, minHeight: `${ blockSize * size.y }px` }}
+        >
             {
-            isReady &&
-            <div
-                className="bg-slate-200 fade-in-block flex justify-center items-center rounded-md"
-                style={{ gridArea: name, minHeight: `${ blockSize * size.y }px` }}
-            >
-                { element.value.name }
-            </div>
+                !!Theme ?
+                <Theme element={ element.value } loaded={ loaded } addLoaded={ addLoaded } idx={ idx } /> :
+                <Default element={ element.value } />
             }
-        </>
+        </div>
     )
 }

@@ -1,59 +1,94 @@
+// React
+import { useReducer } from "react"
+
 // Components
 import GridMasonry from "@/components/Common/Apps/Advanced/GridMasonry"
+import DomainBlock from "@/components/Common/Apps/Advanced/GridMasonry/Themes/DomainBlock"
 
 const TEST_DATA = [
     {
-        name: '1',
+        name: 'test.com',
+        available: true,
+        more: {
+            registrar: "lorem ipsum",
+            lastUpdate: "lorem ipsum"
+        }
     },
     {
-        name: '2',
+        name: 'test.org',
+        available: false,
+        more: {
+            registrar: "lorem ipsum",
+            lastUpdate: "lorem ipsum"
+        }
     },
     {
-        name: '3',
+        name: 'test.net',
+        available: true,
+        more: {
+            registrar: "lorem ipsum",
+            lastUpdate: "lorem ipsum"
+        }
     },
     {
-        name: '4',
+        name: 'test.bot',
+        available: false,
+        more: {
+            registrar: "lorem ipsum",
+            lastUpdate: "lorem ipsum"
+        }
     },
     {
-        name: '5',
+        name: 'test.ai',
+        available: true,
+        more: {
+            registrar: "lorem ipsum",
+            lastUpdate: "lorem ipsum"
+        }
     },
     {
-        name: '6',
+        name: 'test.xyz',
+        available: false,
+        more: {
+            registrar: "lorem ipsum",
+            lastUpdate: "lorem ipsum"
+        }
     },
     {
-        name: '7',
+        name: 'test.app',
+        available: true,
+        more: {
+            registrar: "lorem ipsum",
+            lastUpdate: "lorem ipsum"
+        }
     },
     {
-        name: '8',
-    },
-    {
-        name: '9',
-    },
-    {
-        name: '10',
-    },
-    {
-        name: '11',
-    },
-    {
-        name: '12',
-    },
-    {
-        name: '13',
-    },
-    {
-        name: '14',
-    },
-    {
-        name: '15',
+        name: 'test.game',
+        available: false,
+        more: {
+            registrar: "lorem ipsum",
+            lastUpdate: "lorem ipsum"
+        }
     },
 ]
 
 export default function Test() {
 
+    const handleLoaded = ({ count }) => {
+        if (count < TEST_DATA.length - 1) return { done: false, count: count + 1 }
+        return { done: true, count: count }
+    }
+
+    const [ loaded, addLoaded ] = useReducer(handleLoaded, { done: false, count: 0 })
+
     return (
         <div className="w-full">
-            <GridMasonry data={ TEST_DATA } />
+            <GridMasonry
+                data={ TEST_DATA }
+                loaded={ loaded }
+                addLoaded={ addLoaded }
+                theme={ DomainBlock }
+            />
         </div>
     )
 }
