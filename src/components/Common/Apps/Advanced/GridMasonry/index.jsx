@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react"
 const BLOCK_SIZE = 300 // 300 px
 const GAP_SIZE = 10 // 10 px
 
-const X_RULES = [
+const SHAPES_RULES = [
     {
         id: 0, // Square
         size: {
@@ -36,7 +36,7 @@ const initializedRow = (chunkSize) => {
 }
 
 const generateShapesRoast = (spaceAvailable) =>
-    X_RULES.filter(({ size }) => size.x <= spaceAvailable)
+    SHAPES_RULES.filter(({ size }) => size.x <= spaceAvailable)
 
 const generateChunkSize = (wrapperWidth) =>
     Math.floor(wrapperWidth / (BLOCK_SIZE + GAP_SIZE))
@@ -89,7 +89,11 @@ const getMasonry = (chunkSize, data) => {
                 rows[curr + y].availability[idx + x] = false
                 rows[curr + y].values[idx + x] = {
                     shapeId: rndShape.id,
-                    element: element
+                    element: element,
+                    start: {
+                        x: idx,
+                        y: curr
+                    }
                 }
             }
         }
@@ -101,8 +105,32 @@ const getMasonry = (chunkSize, data) => {
 }
 
 const generateGridTemplateAreaStyle = (masonry) => {
-    console.log('MASONRY', masonry)
-
+    let tempMasonry = [ ...masonry ]
+    const areaTemplate = [ ...tempMasonry.map(row => row.values.map(() => '.')) ]
+    const shapesToPlace = []
+    for (let curr = 0; curr < masonry.length; curr++) {
+        for (let idx = 0; idx < tempMasonry[curr].values.length; idx++) {
+            const element = tempMasonry[curr].values[idx]
+            if (!element) continue
+            // console.log(element)
+            // console.log(element.start, element.shapeId)
+            shapesToPlace.push({
+                name: `BLOCK-${ element.element.id }`,
+                size: SHAPES_RULES[element.shapeId].size,
+                element: element.element
+            })
+            for (let y = 0; y < SHAPES_RULES[element.shapeId].size.y; y++) {
+                for (let x = 0; x < SHAPES_RULES[element.shapeId].size.x; x++) {
+                    areaTemplate[element.start.y + y][element.start.x + x] = `BLOCK-${ element.element.id }`
+                    tempMasonry[element.start.y + y].values[element.start.x + x] = undefined // Delete Chunks
+                }
+            }
+        }
+    }
+    return [
+        areaTemplate.map(row => row.join(' ')).map(row => `"${ row }"`).join('\n'),
+        shapesToPlace
+    ]
 }
 
 export default function GridMasonry({ data }) {
@@ -111,11 +139,20 @@ export default function GridMasonry({ data }) {
     const [ wrapperWidth, setWrapperWidth ] = useState()
     const [ chunkSize, setChunkSize ] = useState() // How many chunks in a row
     const [ masonry, setMasonry ] = useState()
+    const [ gridTemplateArea, setGridTemplateArea ] = useState()
+    const [ shapesToPlace, setShapesToPlace ] = useState()
+
+    useEffect(() => {
+        if (!shapesToPlace) return
+        console.log(shapesToPlace)
+    }, [shapesToPlace])
 
     useEffect(() => {
         if (!masonry) return
-        generateGridTemplateAreaStyle(masonry)
-        // console.log('NEW MASONRY')
+        console.log('masonry', masonry)
+        const [ areaTemplate, orderPlace ] = generateGridTemplateAreaStyle(masonry)
+        setGridTemplateArea(areaTemplate)
+        setShapesToPlace(orderPlace)
     }, [ masonry ])
 
     useEffect(() => {
@@ -146,12 +183,19 @@ export default function GridMasonry({ data }) {
 
     return (
         <div ref={ wrapperRef } className="masonry-wrapper w-full">
-            {
-                !!masonry &&
-                masonry.map(row => {
-                    
-                })
-            }
+            <div className="grid" style={{ gridTemplateAreas: gridTemplateArea, gap: `${ GAP_SIZE }px` }}>
+                {
+                    shapesToPlace?.map(({ name, size, element }) =>
+                        <div
+                            className="bg-slate-200 flex justify-center items-center rounded-md"
+                            style={{ gridArea: name, height: `${ BLOCK_SIZE * size.y }px` }}
+                            key={ name }
+                        >
+                            { name }
+                        </div>
+                    )
+                }
+            </div>
         </div>
     )
 }
