@@ -42,7 +42,7 @@ export default function DomainBlock({ loaded, addLoaded, element, idx }) {
         const img = data.results[Math.floor(Math.random() * data.results.length)]
         
         placeHolderRef.current.src = img.urls.thumb
-        imgRef.current.src = img.urls.raw
+        imgRef.current.src = img.urls.regular
     }
     
     return (
@@ -52,17 +52,22 @@ export default function DomainBlock({ loaded, addLoaded, element, idx }) {
             <img ref={ imgRef } style={{ opacity: 0 }} loading="lazy" className="transition-opacity duration-1000 absolute bottom-0 left-0 w-full h-full object-cover z-20" />
             <div className="text-white relative z-40 w-full h-full flex flex-col justify-end">
                 <div className="m-5 space-y-3">
-                    <Placeholder loaded={ loaded } width="50%">
-                        <p className="text-4xl font-medium leading-8">{ element.name }</p>
+                    <Placeholder loaded={ loaded }>
+                        <p className="w-fit text-4xl font-medium leading-8">{ element.name }</p>
                     </Placeholder>
-                    <Placeholder loaded={ loaded } width="30%">
-                        <p className="text-xl text-slate-100 leading-5">
-                            {
-                                element.available ?
-                                    'Available' : 'Not Available'
-                            }
-                        </p>
-                    </Placeholder>
+                    <div className="flex items-center space-x-3">
+                        <Placeholder loaded={ loaded }>
+                            <img src={ element.available ? 'icons/Apps/thumb-up.svg' : 'icons/Apps/thumb-down.svg' } />
+                        </Placeholder>
+                        <Placeholder loaded={ loaded }>
+                            <p className={`w-fit text-xl text-slate-100 leading-6 ${ element.available ? 'text-green-400' : 'text-red-400' }`}>
+                                {
+                                    element.available ?
+                                        'Available' : 'Not Available'
+                                }
+                            </p>
+                        </Placeholder>
+                    </div>
                 </div>
             </div>
             <div className="absolute w-[30px] h-[30px] bg-white top-0 right-0 z-50 m-3 rounded-full flex justify-center items-center cursor-pointer">

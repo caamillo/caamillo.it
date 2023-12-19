@@ -188,7 +188,7 @@ export default function GridMasonry({ data, theme, loaded, addLoaded }) {
     })
 
     return (
-        <div className="w-full flex justify-center">
+        <div className="w-full flex justify-center select-none">
             <div ref={ wrapperRef } className="grid mx-2 container" style={{ gridTemplateAreas: gridTemplateArea, gap: `${ GAP_SIZE }px` }}>
                 {
                     shapesToPlace?.map(({ name, size, element }, idx) =>
