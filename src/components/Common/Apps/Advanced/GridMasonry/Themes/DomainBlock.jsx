@@ -5,9 +5,6 @@ import Image from "next/image"
 // Components
 import Placeholder from "@/components/Common/SkeletonLoader/Placeholder"
 
-// Public
-import tlds from 'public/apps/domain-finder/index.json'
-
 const INTERVAL_WAIT = 100
 
 export default function DomainBlock({ loaded, addLoaded, element, idx }) {
@@ -24,26 +21,17 @@ export default function DomainBlock({ loaded, addLoaded, element, idx }) {
     }, [ loaded ])
 
     useEffect(() => {
+        console.log(element)
         placeHolderRef.current.onload = () => placeHolderRef.current.style.opacity = 1
         imgRef.current.onload = () => {
             setIsLoading(false)
             addLoaded()
             imgRef.current.style.opacity = 1
         }
-        fetchImage()
-    }, [])
-    
-    const fetchImage = async () => {
-        const parsed = element.name.split('.').slice(-1).join('')
-        const tld = tlds.data.tlds[parsed]
-        const res = await fetch(`https://api.unsplash.com/search/photos/?client_id=${ process.env.NEXT_PUBLIC_UNSPLASH_ACCESS_KEY }&query=${ tld.query }&per_page=30`)
-        const data = await res.json()
 
-        const img = data.results[Math.floor(Math.random() * data.results.length)]
-        
-        placeHolderRef.current.src = img.urls.thumb
-        imgRef.current.src = img.urls.regular
-    }
+        placeHolderRef.current.src = element.img.small
+        imgRef.current.src = element.img.regular
+    }, [])
     
     return (
         <div ref={ wrapperRef } style={{ opacity: 0 }} className="transition-opacity duration-1000 w-full h-full rounded-md relative overflow-hidden bg-slate-200">
@@ -53,16 +41,16 @@ export default function DomainBlock({ loaded, addLoaded, element, idx }) {
             <div className="text-white relative z-40 w-full h-full flex flex-col justify-end">
                 <div className="m-5 space-y-3">
                     <Placeholder loaded={ loaded }>
-                        <p className="w-fit text-4xl font-medium leading-8">{ element.name }</p>
+                        <p className="w-fit text-4xl font-medium leading-8">{ `${ element.query }.${ element.data.tld }` }</p>
                     </Placeholder>
                     <div className="flex items-center space-x-3">
                         <Placeholder loaded={ loaded }>
-                            <img src={ element.available ? 'icons/Apps/thumb-up.svg' : 'icons/Apps/thumb-down.svg' } />
+                            <img src={ element.data.available ? '/icons/Apps/thumb-up.svg' : '/icons/Apps/thumb-down.svg' } />
                         </Placeholder>
                         <Placeholder loaded={ loaded }>
-                            <p className={`w-fit text-xl text-slate-100 leading-6 ${ element.available ? 'text-green-400' : 'text-red-400' }`}>
+                            <p className={`w-fit text-xl text-slate-100 leading-6 ${ element.data.available ? 'text-green-400' : 'text-red-400' }`}>
                                 {
-                                    element.available ?
+                                    element.data.available ?
                                         'Available' : 'Not Available'
                                 }
                             </p>
@@ -71,7 +59,7 @@ export default function DomainBlock({ loaded, addLoaded, element, idx }) {
                 </div>
             </div>
             <div className="absolute w-[30px] h-[30px] bg-white top-0 right-0 z-50 m-3 rounded-full flex justify-center items-center cursor-pointer">
-                <img src="icons/Apps/more.svg" className="select-none" />
+                <img src="/icons/Apps/more.svg" className="select-none" />
             </div>
         </div>
     )

@@ -52,11 +52,11 @@ const getMasonry = (chunkSize, data) => {
     let rows = [
         initializedRow(chunkSize)
     ]
-
-    let dataPool = [ ...[ ...data ].map((el, idx) => {
+    let dataPool = [ ...[ ...data.data ].map((el, idx) => {
         return {
             id: idx,
-            value: el
+            value: el,
+            query: data.query
         }
     }) ]
 
@@ -132,14 +132,14 @@ const generateGridTemplateAreaStyle = (masonry) => {
             }
         }
     }
-    console.log(areaTemplate.map(row => row.join(' ')).map(row => `"${ row }"`).join('\n'))
+    // console.log(areaTemplate.map(row => row.join(' ')).map(row => `"${ row }"`).join('\n'))
     return [
         areaTemplate.map(row => row.join(' ')).map(row => `"${ row }"`).join('\n'),
         shapesToPlace
     ]
 }
 
-export default function GridMasonry({ data, theme, loaded, addLoaded }) {
+export default function GridMasonry({ data, theme, loaded, addLoaded, className }) {
 
     const wrapperRef = useRef()
     const [ wrapperWidth, setWrapperWidth ] = useState()
@@ -150,22 +150,22 @@ export default function GridMasonry({ data, theme, loaded, addLoaded }) {
 
     useEffect(() => {
         if (!shapesToPlace) return
-        console.log(shapesToPlace)
+        // console.log(shapesToPlace)
     }, [shapesToPlace])
 
     useEffect(() => {
         if (!masonry) return
-        console.log('masonry', masonry)
+        // console.log('masonry', masonry)
         const [ areaTemplate, orderPlace ] = generateGridTemplateAreaStyle(masonry)
         setGridTemplateArea(areaTemplate)
         setShapesToPlace(orderPlace)
     }, [ masonry ])
 
     useEffect(() => {
-        if (!chunkSize) return
+        if (!chunkSize || !data) return
         // console.log('chunkSize', chunkSize)
         setMasonry(getMasonry(chunkSize, data))
-    }, [ chunkSize ])
+    }, [ chunkSize, data ])
 
     useEffect(() => {
         if (!wrapperWidth) return
@@ -188,7 +188,7 @@ export default function GridMasonry({ data, theme, loaded, addLoaded }) {
     })
 
     return (
-        <div className="w-full flex justify-center select-none">
+        <div className={`w-full flex justify-center select-none ${ className }`}>
             <div ref={ wrapperRef } className="grid mx-2 container" style={{ gridTemplateAreas: gridTemplateArea, gap: `${ GAP_SIZE }px` }}>
                 {
                     shapesToPlace?.map(({ name, size, element }, idx) =>

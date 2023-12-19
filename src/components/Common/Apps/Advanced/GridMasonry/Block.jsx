@@ -13,7 +13,7 @@ export default function Block({ name, size, element, blockSize, idx, Theme, load
         >
             {
                 !!Theme ?
-                <Theme element={ element.value } loaded={ loaded } addLoaded={ addLoaded } idx={ idx } /> :
+                <Theme element={ { query: element.query, ...element.value } } loaded={ loaded } addLoaded={ addLoaded } idx={ idx } /> :
                 <Default element={ element.value } />
             }
         </div>
