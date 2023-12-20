@@ -19,28 +19,36 @@ export default function Domain() {
 
     const searchDomain = () => {
         if (!searchRef.current.value) return alert('asaasafs')
-        fetch(`${ process.env.NEXT_PUBLIC_API_ENDPOINT }/v1/bulk-whois/${ searchRef.current.value }`, {
+        // setSearch(undefined)
+        fetch(`${ process.env.NEXT_PUBLIC_API_ENDPOINT }/v1/bulk-whois/${ searchRef.current.value }?page=${ page }&chunk=4`, {
             method: 'GET',
             headers: {
                 Authorization: `Bearer ${ token }`
             }
         })
             .then(res => res.json())
-            .then(data => setSearch({
-                query: searchRef.current.value,
-                data: data
+            .then(data => setSearch(search => {
+                setPage(page => page + 1)
+                let dataArr = []
+                if (search?.data) dataArr.push(...search.data)
+                return {
+                    query: searchRef.current.value,
+                    data: [
+                        ...dataArr,
+                        ...data
+                    ]
+                }
             }))
     }
 
     const searchRef = useRef()
     const [ search, setSearch ] = useState()
+    const [ page, setPage ] = useState(0)
     const [ loaded, addLoaded ] = useReducer(({ count }) => {
         if (count < search.length - 1) return { done: false, count: count + 1 }
         return { done: true, count: count }
     }, { done: false, count: 0 })
     const { token } = useContext(AppContext)
-
-
 
     return (
         <div className="w-full flex justify-center">
@@ -49,13 +57,14 @@ export default function Domain() {
                     <input onKeyDown={ avoidIllegalCharacters } ref={ searchRef } placeholder="Search for a domain..." className="w-full h-full placeholder:text-slate-400 placeholder:font-normal text-slate-600 font-medium rounded-md outline-none px-3 pr-14 bg-slate-200 text-2xl" />
                     <img onClick={ searchDomain } src="/icons/Apps/search.svg" className="absolute top-1/2 -translate-y-1/2 right-5 w-[30px] cursor-pointer" />
                 </div>
-                <GridMasonry
-                    className='mt-5'
-                    data={ search }
-                    loaded={ loaded }
-                    addLoaded={ addLoaded }
-                    theme={ DomainBlock }
-                />
+                <div className="w-full my-5">
+                    <GridMasonry
+                        data={ search }
+                        loaded={ loaded }
+                        addLoaded={ addLoaded }
+                        theme={ DomainBlock }
+                    />
+                </div>
             </div>
         </div>
     )

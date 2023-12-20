@@ -18,8 +18,8 @@ const services = [
 export default function Navbar({ user, currServiceIdx, setCurrServiceIdx }) {
 
     return (
-        <div className="m-5">
-            <div className="w-full bg-slate-100 shadow-md rounded-md p-5 flex justify-between">
+        <div className="m-5 flex justify-center">
+            <div className="xl:w-full container bg-slate-100 shadow-md rounded-md p-5 flex justify-between">
                 <div className="flex flex-col justify-center">
                     <p className="font-bold text-slate-800">Apps:</p>
                     <div className="flex space-x-3">

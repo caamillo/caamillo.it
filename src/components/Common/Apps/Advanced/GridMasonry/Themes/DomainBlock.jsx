@@ -21,7 +21,6 @@ export default function DomainBlock({ loaded, addLoaded, element, idx }) {
     }, [ loaded ])
 
     useEffect(() => {
-        console.log(element)
         placeHolderRef.current.onload = () => placeHolderRef.current.style.opacity = 1
         imgRef.current.onload = () => {
             setIsLoading(false)
@@ -41,16 +40,16 @@ export default function DomainBlock({ loaded, addLoaded, element, idx }) {
             <div className="text-white relative z-40 w-full h-full flex flex-col justify-end">
                 <div className="m-5 space-y-3">
                     <Placeholder loaded={ loaded }>
-                        <p className="w-fit text-4xl font-medium leading-8">{ `${ element.query }.${ element.data.tld }` }</p>
+                        <p className="w-fit text-4xl font-medium leading-8">{ `${ element.query }.${ element.data?.tld ?? 'com' }` }</p>
                     </Placeholder>
                     <div className="flex items-center space-x-3">
                         <Placeholder loaded={ loaded }>
-                            <img src={ element.data.available ? '/icons/Apps/thumb-up.svg' : '/icons/Apps/thumb-down.svg' } />
+                            <img src={ element.data?.available ? '/icons/Apps/thumb-up.svg' : '/icons/Apps/thumb-down.svg' } />
                         </Placeholder>
                         <Placeholder loaded={ loaded }>
-                            <p className={`w-fit text-xl text-slate-100 leading-6 ${ element.data.available ? 'text-green-400' : 'text-red-400' }`}>
+                            <p style={{ color: element.data?.available ? 'rgb(74 222 128)' : 'rgb(248 113 113)'  }} className={`w-fit text-xl text-slate-100 leading-6`}>
                                 {
-                                    element.data.available ?
+                                    element.data?.available ?
                                         'Available' : 'Not Available'
                                 }
                             </p>
