@@ -47,62 +47,6 @@ const generateShapesRoast = (chunkSize, spaceAvailable) =>
 const generateChunkSize = (wrapperWidth) =>
     Math.floor(wrapperWidth / (BLOCK_SIZE + GAP_SIZE))
 
-const getMasonry = (chunkSize, data) => {
-    if (!chunkSize || !data) return []
-    let curr = 0
-    let pushed = 0
-    let rows = [
-        initializedRow(chunkSize)
-    ]
-    let dataPool = [ ...[ ...data.data ].map((el, idx) => {
-        return {
-            id: idx,
-            value: el,
-            query: data.query
-        }
-    }) ]
-
-    while (dataPool.length) {
-        const element = dataPool[0] // Always select first element in datapool
-
-        // General Context
-        if (curr >= rows.length) rows.push(initializedRow(chunkSize))
-        const row = rows[curr]
-
-        // Shape Placement Context
-        const idx = row.availability.findIndex(el => el) // Find first place available in row
-        if (idx < 0) { // If not found, search for next row and go for next loop tick
-            curr += 1
-            continue
-        }
-        const collisionIdx = row.availability.findIndex((el, elIdx) => elIdx > idx && !el)
-
-        const shapesRoast = generateShapesRoast(chunkSize, collisionIdx >= 0 ? collisionIdx - idx : row.availability.length - idx)
-
-        const rndShape = shapesRoast[Math.floor(Math.random() * shapesRoast.length)]
-        // Place Shapes
-        for (let y = 0; y < rndShape.size.y; y++) { // Drawing shapes y - x
-            for (let x = 0; x < rndShape.size.x; x++) {
-                if (curr + y >= rows.length) rows.push(initializedRow(chunkSize))
-                rows[curr + y].availability[idx + x] = false
-                rows[curr + y].values[idx + x] = {
-                    id: pushed,
-                    shapeId: rndShape.id,
-                    element: element,
-                    start: {
-                        x: idx,
-                        y: curr
-                    }
-                }
-            }
-        }
-        pushed += 1
-        
-        dataPool = dataPool.filter((el, elIdx) => elIdx) // Remove first element after draw
-    }
-    return rows
-}
-
 const generateGridTemplateAreaStyle = (masonry) => {
     let tempMasonry = JSON.parse(JSON.stringify(masonry))
     const areaTemplate = [ ...tempMasonry.map(row => row.values.map(() => '.')) ]
@@ -130,15 +74,16 @@ const generateGridTemplateAreaStyle = (masonry) => {
     ]
 }
 
-const addToMasonry = (rows, data, chunkSize) => {
+const addToMasonry = (data, chunkSize, rows=[]) => {
     let curr = rows.findIndex(row => row.availability.some(el => el))
     if (curr === -1) {
         rows.push(initializedRow(chunkSize))
         curr = rows.length - 1
     }
     const allIds = rows.map(row => row.values).map(value => value.map(el => el?.id)).flat().filter(id => typeof id === 'number')
-    let pushed = Math.max(...allIds) + 1
-    console.log('last pushed:', pushed)
+    let pushed
+    if (allIds.length) pushed = Math.max(...allIds) + 1
+    else pushed = 0
     let dataPool = [ ...[ ...data.data ].map((el, idx) => {
         return {
             id: idx,
@@ -188,6 +133,57 @@ const addToMasonry = (rows, data, chunkSize) => {
     }
     return rows
 }
+// [{ availability[], values[] } -> ROW ] -> ROWS
+const fillMasonry = (data, rows=[], setWaitingData) => {
+    let emptyBlocks = []
+    const checkedIds = []
+    for (let y in rows) {
+        const row = rows[y]
+        for (let x in row.values) {
+            if (!checkedIds.includes(row.values[x]?.id) && !row.availability[x] && row.values[x]?.id >= 0 && row.values[x]?.element.value === undefined) // check if block is owned and if it's empty
+                emptyBlocks.push({
+                    x: parseInt(x),
+                    y: parseInt(y)
+                })
+            if(row.values[x]?.id >= 0 && !checkedIds.includes(row.values[x]?.id)) checkedIds.push(row.values[x].id)
+        }
+        if (emptyBlocks.length >= data.data.length) break // May be greater or lower than data pooling length
+    }
+    // Check if we need more empty-blocks
+    if (emptyBlocks.length < data.data.length) {
+        // Then, we take last -diff datas
+        const diff = data.data.length - emptyBlocks.length
+        // TODO: check if before that pool also exists another add event so to make less adding
+        setWaitingData(waitingData => [
+            ...waitingData,
+            {
+                query: data.query,
+                type: 'add',
+                data: data.data.slice(-diff).map(() => undefined)
+            },
+            {
+                query: data.query,
+                type: 'fill',
+                data: data.data.slice(-diff)
+            }
+        ])
+    } else {
+        for (let idx in data.data) {
+            const element = data.data[idx]
+            const emptyBlock = emptyBlocks[idx]
+            const block = rows[emptyBlock.y].values[emptyBlock.x]
+            const shape = SHAPES_RULES[block.shapeId]
+
+            for (let y = 0; y < shape.size.y; y++) {
+                for (let x = 0; x < shape.size.x; x++) {
+                    rows[block.start.y + y].values[block.start.x + x].element.value = element
+                }
+            }
+        }
+    }
+
+    return rows
+}
 
 export default function GridMasonry({ data, theme, loaded, addLoaded, className }) {
 
@@ -197,25 +193,24 @@ export default function GridMasonry({ data, theme, loaded, addLoaded, className 
     const [ gridTemplateArea, setGridTemplateArea ] = useState()
     const [ shapesToPlace, setShapesToPlace ] = useState()
     const [ diffData, setDiffData ] = useState()
-    const [ lastMasonry, setLastMasonry ] = useState()
+    const [ lastMasonry, setLastMasonry ] = useState([])
     const [ savedData, setSavedData ] = useState([])
     const [ available, setAvailable ] = useState(true)
     const [ waitingData, setWaitingData ] = useState([])
 
     const resolveData = (resolvingData) => {
-        if (!diffData?.data) return setDiffData({
-            ...data,
-            type: 'init'
-        })
-        const oldTlds = savedData.map(el => el.data.tld)
-        console.log('oldTlds', oldTlds)
-        const tempDiffData = resolvingData?.data.filter(el => !oldTlds.includes(el.data.tld)) // Debug this
-        // console.log('diff:', tempDiffData)
-        setDiffData({
-            data: tempDiffData,
-            query: resolvingData.query,
-            type: 'add'
-        })
+        if (resolvingData.type === 'add') {
+            const oldTlds = savedData.map(el => el?.data.tld) // Next, check oldTLDs
+            setDiffData({
+                data: resolvingData.data,
+                query: resolvingData.query,
+                type: 'add'
+            })
+        } else if (resolvingData.type === 'fill') {
+            setDiffData({
+                ...resolvingData
+            })
+        } else console.log(`Error, ${ resolvingData.type } is not a type`)
     }
 
     useEffect(() => {
@@ -242,24 +237,19 @@ export default function GridMasonry({ data, theme, loaded, addLoaded, className 
         setSavedData(savedData => [ ...savedData, ...diffData.data ])
         let masonry
         switch (diffData.type) {
-            case 'init':
-                masonry = getMasonry(chunkSize, data)
-                break
             case 'add':
-                console.log('DIFF DATA', diffData)
-                masonry = addToMasonry(lastMasonry, diffData, chunkSize)
+                masonry = addToMasonry(diffData, chunkSize, lastMasonry)
                 break
-            }
-        console.log('Masonry', masonry)
-        if (!masonry) return
+            case 'fill':
+                masonry = fillMasonry(diffData, lastMasonry, setWaitingData)
+                break
+        }
         setLastMasonry(masonry)
         const [ areaTemplate, orderPlace ] = generateGridTemplateAreaStyle(masonry)
         setGridTemplateArea(areaTemplate)
         setShapesToPlace(orderPlace)
         setAvailable(true)
     }, [ chunkSize, diffData ])
-
-    useEffect(() => console.log('AVAILABLE:', available), [ available ])
 
     useEffect(() => {
         if (!wrapperWidth) return

@@ -18,6 +18,7 @@ export default function Test() {
         if (data?.data) dataArr.push(...data.data)
         return {
             query: 'test',
+            type: 'fill',
             data: [
                 ...dataArr,
                 {

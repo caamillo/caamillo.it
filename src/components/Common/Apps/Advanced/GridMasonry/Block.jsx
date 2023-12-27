@@ -3,8 +3,9 @@ import { useState, useEffect } from "react"
 
 // Theme
 import Default from "./Themes/Default"
+import Ghost from "./Themes/Ghost"
 
-export default function Block({ name, size, element, blockSize, idx, Theme, loaded, addLoaded }) {
+export default function Block({ name, size, element, blockSize, idx, Theme, loaded, addLoaded, value }) {
 
     return (
         <div
@@ -12,9 +13,9 @@ export default function Block({ name, size, element, blockSize, idx, Theme, load
             style={{ gridArea: name, minWidth: `${ blockSize * size.x }px`, minHeight: `${ blockSize * size.y }px` }}
         >
             {
-                !!Theme ?
-                <Theme element={ { query: element.query, ...element.value } } loaded={ loaded } addLoaded={ addLoaded } idx={ idx } /> :
-                <Default element={ element.value } />
+                !!Theme && !!element?.value ?
+                    <Theme element={ { query: element.query, ...element.value } } loaded={ loaded } addLoaded={ addLoaded } idx={ idx } /> :
+                    <Ghost />
             }
         </div>
     )
