@@ -80,7 +80,6 @@ const getMasonry = (chunkSize, data) => {
         const shapesRoast = generateShapesRoast(chunkSize, collisionIdx >= 0 ? collisionIdx - idx : row.availability.length - idx)
 
         const rndShape = shapesRoast[Math.floor(Math.random() * shapesRoast.length)]
-
         // Place Shapes
         for (let y = 0; y < rndShape.size.y; y++) { // Drawing shapes y - x
             for (let x = 0; x < rndShape.size.x; x++) {
@@ -133,6 +132,10 @@ const generateGridTemplateAreaStyle = (masonry) => {
 
 const addToMasonry = (rows, data, chunkSize) => {
     let curr = rows.findIndex(row => row.availability.some(el => el))
+    if (curr === -1) {
+        rows.push(initializedRow(chunkSize))
+        curr = rows.length - 1
+    }
     const allIds = rows.map(row => row.values).map(value => value.map(el => el?.id)).flat().filter(id => typeof id === 'number')
     let pushed = Math.max(...allIds) + 1
     console.log('last pushed:', pushed)
@@ -195,35 +198,55 @@ export default function GridMasonry({ data, theme, loaded, addLoaded, className 
     const [ shapesToPlace, setShapesToPlace ] = useState()
     const [ diffData, setDiffData ] = useState()
     const [ lastMasonry, setLastMasonry ] = useState()
+    const [ savedData, setSavedData ] = useState([])
+    const [ available, setAvailable ] = useState(true)
+    const [ waitingData, setWaitingData ] = useState([])
 
-    useEffect(() => {
-        if (!shapesToPlace) return
-    }, [shapesToPlace])
-
-    useEffect(() => {
-        if (!data) return
+    const resolveData = (resolvingData) => {
         if (!diffData?.data) return setDiffData({
             ...data,
             type: 'init'
         })
-        const oldTlds = diffData?.data.map(el => el.data.tld)
-        const tempDiffData = data?.data.filter(el => !oldTlds.includes(el.data.tld))
+        const oldTlds = savedData.map(el => el.data.tld)
+        console.log('oldTlds', oldTlds)
+        const tempDiffData = resolvingData?.data.filter(el => !oldTlds.includes(el.data.tld)) // Debug this
         // console.log('diff:', tempDiffData)
         setDiffData({
             data: tempDiffData,
-            query: data.query,
+            query: resolvingData.query,
             type: 'add'
         })
+    }
+
+    useEffect(() => {
+        if (!shapesToPlace) return
+    }, [ shapesToPlace ])
+
+    useEffect(() => {
+        if (!available || !waitingData.length) return
+        setWaitingData(waitingData => {
+            setAvailable(false)
+            const firstElem = waitingData[0]
+            resolveData(firstElem)
+            return waitingData.slice(1)
+        })
+    }, [ available, waitingData ])
+
+    useEffect(() => {
+        if (!data) return
+        setWaitingData(waitingData => [ ...waitingData, data ])
     }, [ data ])
 
     useEffect(() => {
         if (!diffData) return
+        setSavedData(savedData => [ ...savedData, ...diffData.data ])
         let masonry
         switch (diffData.type) {
             case 'init':
                 masonry = getMasonry(chunkSize, data)
                 break
             case 'add':
+                console.log('DIFF DATA', diffData)
                 masonry = addToMasonry(lastMasonry, diffData, chunkSize)
                 break
             }
@@ -233,7 +256,10 @@ export default function GridMasonry({ data, theme, loaded, addLoaded, className 
         const [ areaTemplate, orderPlace ] = generateGridTemplateAreaStyle(masonry)
         setGridTemplateArea(areaTemplate)
         setShapesToPlace(orderPlace)
-    }, [ chunkSize, diffData ]) // Remove data here
+        setAvailable(true)
+    }, [ chunkSize, diffData ])
+
+    useEffect(() => console.log('AVAILABLE:', available), [ available ])
 
     useEffect(() => {
         if (!wrapperWidth) return

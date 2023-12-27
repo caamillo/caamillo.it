@@ -21,6 +21,7 @@ export default function DomainBlock({ loaded, addLoaded, element, idx }) {
     }, [ loaded ])
 
     useEffect(() => {
+        console.log(element)
         placeHolderRef.current.onload = () => placeHolderRef.current.style.opacity = 1
         imgRef.current.onload = () => {
             setIsLoading(false)
@@ -33,14 +34,14 @@ export default function DomainBlock({ loaded, addLoaded, element, idx }) {
     }, [])
     
     return (
-        <div ref={ wrapperRef } style={{ opacity: 0 }} className="transition-opacity duration-1000 w-full h-full rounded-md relative overflow-hidden bg-slate-200">
+        <div ref={ wrapperRef } style={{ opacity: 0 }} className="transition-opacity shadow-md duration-1000 w-full h-full rounded-md relative overflow-hidden bg-slate-200">
             <div className="w-full h-full absolute bottom-0 left-0 bg-gradient-to-tr from-[#000000] z-30"></div>
             <img ref={ placeHolderRef } style={{ opacity: 0 }} loading="lazy" className="duration-1000 transition-opacity absolute bottom-0 left-0 w-full h-full object-cover z-10 blur-md" />
             <img ref={ imgRef } style={{ opacity: 0 }} loading="lazy" className="transition-opacity duration-1000 absolute bottom-0 left-0 w-full h-full object-cover z-20" />
             <div className="text-white relative z-40 w-full h-full flex flex-col justify-end">
                 <div className="m-5 space-y-3">
                     <Placeholder loaded={ loaded }>
-                        <p className="w-fit text-4xl font-medium leading-8">{ `${ element.query }.${ element.data?.tld ?? 'com' }` }</p>
+                        <p className="w-fit text-4xl font-medium leading-8">{ `${ element.query }.${ element.data?.tld }` }</p>
                     </Placeholder>
                     <div className="flex items-center space-x-3">
                         <Placeholder loaded={ loaded }>
