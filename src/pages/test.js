@@ -76,13 +76,58 @@ export default function Test() {
         <div className="w-full">
             <button onClick={ EXAMPLE_ADD_DATA } className="bg-slate-300 text-4xl p-5">FEED ME AS A BEAST, PLEASE!</button>
             <Popover
-            options={ [
-                {
-                    name: 'Expand',
-                    icon: 'expand',
-                    action: () => undefined
-                }
-            ] }
+                name=".com"
+                options={[
+                    {
+                        title: 'Domain Name',
+                        subtitle: 'testafss.com',
+                        type: 0
+                    },
+                    {
+                        title: 'Available',
+                        subtitle: <img src="/icons/Apps/thumb-up.svg" className="w-5 mt-1" />,
+                        isSubHtml: true,
+                        type: 0
+                    },
+                    {
+                        title: 'Registrar',
+                        subtitle: 'Testosterone Inc.',
+                        hide: true,
+                        type: 0
+                    },
+                    {
+                        title: 'Updated Date',
+                        subtitle: '01-01-2024',
+                        isDate: true,
+                        hide: true,
+                        type: 0
+                    },
+                    {
+                        title: 'Creation Date',
+                        subtitle: '01-01-2024',
+                        isDate: true,
+                        type: 0
+                    },
+                    {
+                        title: 'Expiration Date',
+                        subtitle: '01-01-2024',
+                        isDate: true,
+                        hide: true,
+                        type: 0
+                    },
+                    {
+                        title: 'Status',
+                        subtitle: 'Ok!',
+                        hide: true,
+                        type: 0
+                    },
+                    {
+                        name: 'Expand',
+                        icon: 'expand',
+                        type: 1,
+                        action: () => undefined
+                    }
+                ]}
             />
             <GridMasonry
                 data={ data }
