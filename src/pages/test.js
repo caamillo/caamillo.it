@@ -4,6 +4,7 @@ import { useReducer, useState, useEffect } from "react"
 // Components
 import GridMasonry from "@/components/Common/Apps/Advanced/GridMasonry"
 import DomainBlock from "@/components/Common/Apps/Advanced/GridMasonry/Themes/DomainBlock"
+import Popover from "@/components/Common/Apps/Advanced/GridMasonry/Themes/DomainBlock/Popover"
 
 export default function Test() {
 
@@ -74,6 +75,15 @@ export default function Test() {
     return (
         <div className="w-full">
             <button onClick={ EXAMPLE_ADD_DATA } className="bg-slate-300 text-4xl p-5">FEED ME AS A BEAST, PLEASE!</button>
+            <Popover
+            options={ [
+                {
+                    name: 'Expand',
+                    icon: 'expand',
+                    action: () => undefined
+                }
+            ] }
+            />
             <GridMasonry
                 data={ data }
                 loaded={ loaded }
