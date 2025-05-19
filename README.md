@@ -15,8 +15,3 @@ I also wrote some api that I will use in this website [api.caamillo.it](https://
 - `/blog` a stupid blog, handled with [prisma studio](https://www.prisma.io/studio)
 - `/bosica` a fullstack tinder-like bosica app
 - `/domains` <b>[WIP]</b> _a fullstack app to search domain availability including some tools like custom search, advanced search, cum..._
-
-## Why don't I use TypeScript?
-
-It's not because I'm lazy or whatever, I just hate it and I am against this stupid philosophy.<br>
-> If I have to use a shit language, let me forward that shit
